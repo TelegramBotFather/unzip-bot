@@ -26,7 +26,7 @@ RUN pip install -U pip setuptools wheel && \
 
 FROM python:3.12-alpine
 
-ARG VERSION="7.1.6a"
+ARG VERSION="7.2.0"
 
 LABEL org.opencontainers.image.authors="EDM115 <unzip@edm115.dev>"
 LABEL org.opencontainers.image.base.name="python:3.12-alpine"

@@ -11,6 +11,14 @@
 
 </div>
 
+> [!IMPORTANT]  
+> The bot is undergoing an important rewrite.  
+> Please be patient and wait a few months to get the unzip-bot in its full glory !  
+> Check [[ROADMAP] The future of unzip-bot (v7) (#296)](https://github.com/EDM115/unzip-bot/issues/296) to know more about the current development.  
+> Check [the master branch](https://github.com/EDM115/unzip-bot/tree/master) to use the older version.
+
+---
+
 ## Working bot :smiling_face_with_three_hearts:
 [@unzip_edm115bot](https://t.me/unzip_edm115bot)  
 More info : [edm115.dev/unzip](https://edm115.dev/unzip)
@@ -59,11 +67,6 @@ help - In case you need 😭
 ## Deploy :construction:
 Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in Heroku or in a VPS :heart:  
 **Star :star2: Fork :fork_and_knife: and Deploy :outbox_tray:**
-
-> [!NOTE]  
-> We are using Arch Linux as a base image. But why :thinking:  
-> Because Arch's p7zip package is the only maintained version of the [original p7zip](http://p7zip.sourceforge.net/) package with some additional features  
-> **EDIT** : We might switch to Alpine Linux in the future, I still have to compare the commits done on the p7zip package
 
 #### The lazy way
 [![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/v7)  
@@ -134,7 +137,7 @@ If you found a bug in this bot please open an [issue](https://github.com/EDM115/
 Same if you have any feature request :wink:
 
 ## License & Copyright :cop:
-Copyright (c) 2022 - 2024 EDM115  
+Copyright (c) 2022 - 2025 EDM115  
   
 This unzip-bot repository is licensed under the [MIT License](https://github.com/EDM115/unzip-bot/blob/master/LICENSE)  
 Enjoy copying and modifying, but always mention me  
