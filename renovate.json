@@ -16,6 +16,9 @@
   "extends": [
     "config:recommended"
   ],
+  "ignoreDeps": [
+    "python"
+  ],
   "labels": [
     "Mend: Renovate"
   ],
