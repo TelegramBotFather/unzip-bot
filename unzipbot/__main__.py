@@ -18,7 +18,6 @@ from .helpers.start import (
 )
 from .i18n.messages import Messages
 
-
 messages = Messages(lang_fetcher=get_lang)
 
 

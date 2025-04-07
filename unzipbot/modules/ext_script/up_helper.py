@@ -4,10 +4,15 @@ import pathlib
 import re
 import shutil
 from datetime import timedelta
-from time import time
 from shlex import quote
+from time import time
 
-from pyrogram.errors import FloodWait, FloodPremiumWait, PhotoExtInvalid, PhotoSaveFileInvalid
+from pyrogram.errors import (
+    FloodPremiumWait,
+    FloodWait,
+    PhotoExtInvalid,
+    PhotoSaveFileInvalid,
+)
 
 from config import Config
 from unzipbot import LOGGER, unzipbot_client
@@ -21,7 +26,6 @@ from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import thumb_exists
 from unzipbot.modules.ext_script.ext_helper import run_shell_cmds
 from unzipbot.modules.ext_script.metadata_helper import get_audio_metadata
-
 
 messages = Messages(lang_fetcher=get_lang)
 

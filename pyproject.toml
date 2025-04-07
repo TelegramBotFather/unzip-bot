@@ -30,8 +30,11 @@ readme = "README.md"
 license = {file = "LICENSE"}
 
 [project.scripts]
+format = "ruff format"
 install = "uv sync"
 install-pip = "pip install -U -r requirements.txt"
+lint = "ruff check"
+lint-fix = "ruff check --fix"
 run = "./start.sh"
 venv = "python -m venv .venv"
 
@@ -39,6 +42,18 @@ venv = "python -m venv .venv"
 "Homepage" = "https://github.com/EDM115/unzip-bot"
 "Bug Tracker" = "https://github.com/EDM115/unzip-bot/issues"
 "Funding" = "https://github.com/EDM115#support-me-"
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+logger-objects = ["unzipbot.LOGGER"]
+select = ["E", "F", "I", "W"]
 
 [tool.uv]
 compile-bytecode = true

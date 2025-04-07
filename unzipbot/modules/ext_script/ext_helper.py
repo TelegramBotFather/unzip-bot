@@ -12,7 +12,6 @@ from unzipbot.helpers.database import get_lang
 from unzipbot.helpers.unzip_help import calculate_memory_limit, tarball_extensions
 from unzipbot.i18n.messages import Messages
 
-
 messages = Messages(lang_fetcher=get_lang)
 
 

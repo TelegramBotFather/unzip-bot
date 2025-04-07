@@ -1,8 +1,8 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from .messages import Messages
 from unzipbot.helpers.database import get_lang
 
+from .messages import Messages
 
 messages = Messages(lang_fetcher=get_lang)
 

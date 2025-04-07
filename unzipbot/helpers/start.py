@@ -6,7 +6,7 @@ from time import time
 
 import aiocron
 from pyrogram import enums
-from pyrogram.errors import FloodWait, FloodPremiumWait
+from pyrogram.errors import FloodPremiumWait, FloodWait
 
 from config import Config
 from unzipbot import LOGGER, boottime, unzipbot_client

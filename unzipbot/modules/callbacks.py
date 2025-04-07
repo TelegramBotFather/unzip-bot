@@ -48,17 +48,16 @@ from unzipbot.i18n.messages import Messages
 from .commands import get_stats, https_url_regex, sufficient_disk_space
 from .ext_script.custom_thumbnail import silent_del
 from .ext_script.ext_helper import (
-    test_with_7z_helper,
-    test_with_unrar_helper,
     extr_files,
     get_files,
     make_keyboard,
     make_keyboard_empty,
     merge_files,
     split_files,
+    test_with_7z_helper,
+    test_with_unrar_helper,
 )
 from .ext_script.up_helper import answer_query, get_size, send_file, send_url_logs
-
 
 split_file_pattern = r"\.z\d+$"
 rar_file_pattern = r"\.(?:r\d+|part\d+\.rar)$"
@@ -101,22 +100,28 @@ def find_lowest_sequence_file(files):
 
         # Priority: .partX.rar -> .rX
         if part_files:
-            return min(part_files, key=lambda x: get_sequence_number(x, r"part\d+")), "rar"
+            return min(
+                part_files, key=lambda x: get_sequence_number(x, r"part\d+")
+            ), "rar"
         elif r_files:
             return min(r_files, key=lambda x: get_sequence_number(x, r"\.r\d+$")), "rar"
 
     # Handle other cases
     if volume_matches:
-        return min(volume_matches, key=lambda x: get_sequence_number(x, r"\.\d+$")), "volume"
+        return min(
+            volume_matches, key=lambda x: get_sequence_number(x, r"\.\d+$")
+        ), "volume"
 
     raise IndexError("No matching files found")
 
 
 async def download(url, path):
     try:
-        async with ClientSession() as session, session.get(
-            url, timeout=None, allow_redirects=True
-        ) as resp, openfile(path, mode="wb") as file:
+        async with (
+            ClientSession() as session,
+            session.get(url, timeout=None, allow_redirects=True) as resp,
+            openfile(path, mode="wb") as file,
+        ):
             async for chunk in resp.content.iter_chunked(Config.CHUNK_SIZE):
                 await file.write(chunk)
     except InvalidURL:
@@ -129,9 +134,10 @@ async def download_with_progress(url, path, message, unzip_bot):
     uid = message.from_user.id
 
     try:
-        async with ClientSession() as session, session.get(
-            url, timeout=None, allow_redirects=True
-        ) as resp:
+        async with (
+            ClientSession() as session,
+            session.get(url, timeout=None, allow_redirects=True) as resp,
+        ):
             total_size = int(resp.headers.get("Content-Length", 0))
             current_size = 0
             start_time = time()
@@ -519,7 +525,9 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         else:
             # Can't test the archive apparently
             ext_s_time = time()
-            extractor = await merge_files(iinput=file, ooutput=ext_files_dir, file_type=file_type)
+            extractor = await merge_files(
+                iinput=file, ooutput=ext_files_dir, file_type=file_type
+            )
             ext_e_time = time()
 
         # Checks if there is an error happened while extracting the archive
@@ -779,7 +787,9 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 try:
                                     loop = asyncio.get_event_loop()
 
-                                    with concurrent.futures.ThreadPoolExecutor() as pool:
+                                    with (
+                                        concurrent.futures.ThreadPoolExecutor() as pool
+                                    ):
                                         rzf, paths = await loop.run_in_executor(
                                             pool, get_zip_http, url
                                         )

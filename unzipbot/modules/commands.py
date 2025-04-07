@@ -11,7 +11,7 @@ from sys import executable
 import git
 import psutil
 from pyrogram import enums, filters
-from pyrogram.errors import FloodWait, FloodPremiumWait, RPCError
+from pyrogram.errors import FloodPremiumWait, FloodWait, RPCError
 from pyrogram.types import Message
 
 from config import Config
@@ -45,7 +45,6 @@ from unzipbot.i18n.buttons import Buttons
 from unzipbot.i18n.messages import Messages
 from unzipbot.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from unzipbot.modules.ext_script.ext_helper import get_files
-
 
 # Regex for urls
 https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
@@ -177,7 +176,7 @@ async def extract_archive(_, message: Message):
     try:
         if message.chat.type != enums.ChatType.PRIVATE:
             return
-        
+
         user_id = message.from_user.id
 
         if await get_merge_task(user_id):
@@ -187,7 +186,7 @@ async def extract_archive(_, message: Message):
             await message.reply(messages.get("commands", "STILL_STARTING", user_id))
 
             return
-        
+
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
 
         if os.path.isdir(download_path):
@@ -882,7 +881,17 @@ async def exec_command(_, message):
     cmd = message.text.split(" ", maxsplit=1)[1]
     memlimit = calculate_memory_limit()
     cpulimit = Config.MAX_CPU_CORES_COUNT * Config.MAX_CPU_USAGE
-    ulimit_cmd = ["ulimit", "-v", str(memlimit), "&&", "cpulimit", "-l", str(cpulimit), "--", cmd]
+    ulimit_cmd = [
+        "ulimit",
+        "-v",
+        str(memlimit),
+        "&&",
+        "cpulimit",
+        "-l",
+        str(cpulimit),
+        "--",
+        cmd,
+    ]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
         ulimit_command,

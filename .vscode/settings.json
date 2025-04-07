@@ -44,7 +44,7 @@
   "explorer.fileNesting.patterns": {
     ".env": ".python-version, config.py",
     ".gitignore": ".deepsource.toml, .whitesource, AUTHORS, CONTRIBUTORS.svg, renovate.json",
-    "Dockerfile": ".dockerignore, pyproject.toml",
+    "Dockerfile": ".dockerignore, pyproject.toml, uv.lock",
     "heroku.yml": "app.json",
     "package.json": "package-lock.json, pnpm*",
     "README.md": "LICENSE, CHANGELOG.md, CreateMongoDB.md, bot_thumb.jpg",
