@@ -44,12 +44,12 @@ More info : [edm115.dev/unzip](https://edm115.dev/unzip)
 And much more :fire: Dive into the code to find out :hand_over_mouth:
 
 ## Config vars :book:
-- `APP_ID` - Your APP ID. Get it from [my.telegram.org](my.telegram.org)
-- `API_HASH` - Your API_HASH. Get it from [my.telegram.org](my.telegram.org)
+- `APP_ID` - Your APP ID. Get it from [my.telegram.org](https://my.telegram.org)
+- `API_HASH` - Your API_HASH. Get it from [my.telegram.org](https://my.telegram.org)
 - `BOT_OWNER` - Your Telegram Account ID. Get it from [@MissRose_bot](https://t.me/MissRose_bot) (Start the bot and send `/info` command).
 - `BOT_TOKEN` - Bot Token of Your Telegram Bot. Get it from [@BotFather](https://t.me/BotFather)
 - `MONGODB_DBNAME` - *(optional)* A custom name for the MongoDB database, useful if you deploy multiple instances of the bot on the same account. Defaults to `Unzipper_Bot`
-- `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](./CreateMongoDB.md))
+- `MONGODB_URL` - Your MongoDB URL ([**tutorial here**](CreateMongoDB.md))
 - `LOGS_CHANNEL` - Make a private channel and get its ID (search on Google if you don't know how to do). Using a group works as well, just add [`Rose`](https://t.me/MissRose_bot?startgroup=startbot), then send `/id` (In both cases, **make sure to add your bot to the channel/group as an admin !**)
 
 ## Commands :writing_hand:
@@ -82,20 +82,15 @@ docker build -t edm115/unzip-bot .
 - Open Docker Desktop, go on the Images tab, click on the Run button
 - On Optional settings, fill the env variables
 
-#### The legacy way
+#### The nerdy way
 ```bash
 git clone https://github.com/EDM115/unzip-bot.git && cd unzip-bot
-pip3 install -r requirements.txt
-```
-- Install required dependencies  
-  Arch Linux : `sudo pacman -S p7zip`  
-  Ubuntu/Debian : `sudo apt-get install p7zip-full p7zip-rar`
-- Edit `.env` with your own values
-```bash
-chmod +x start.sh && ./start.sh
+nano .env
+docker build -t edm115/unzip-bot .
+docker run -d -v downloaded-volume-prod:/app/Downloaded -v thumbnails-volume-prod:/app/Thumbnails --env-file ./.env --name unzipbot edm115/unzip-bot
 ```
 
-**DONE :partying_face: enjoy the bot !** Be sure to follow me on [Github](https://github.com/EDM115) and Star :star2: this repo to show some support :pleading_face:
+**DONE :partying_face: enjoy the bot !** Be sure to follow me on [GitHub](https://github.com/EDM115) and Star :star2: this repo to show some support :pleading_face:
 
 ## How to build after changes ?
 #### Trust GitHub Actions

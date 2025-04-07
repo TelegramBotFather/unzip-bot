@@ -22,6 +22,4 @@ if [ -f .env ] && [[ ! "$DYNO" =~ ^worker.* ]]; then
   fi
 fi
 
-export TZ="Europe/Paris"
-
 exec python -m unzipbot

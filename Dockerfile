@@ -1,5 +1,7 @@
 FROM python:3.12-alpine AS build
 
+ENV UV_INSTALL_DIR="/uv"
+
 RUN apk update && \
     apk add --no-cache \
         bash \
@@ -9,23 +11,24 @@ RUN apk update && \
         libffi-dev \
         make \
         musl-dev && \
-    python -m venv /venv
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
 SHELL ["/bin/bash", "-c"]
 
-ENV PATH="/venv/bin:$PATH"
+ENV PATH="$UV_INSTALL_DIR:$PATH"
 
 WORKDIR /tmp
 
-COPY requirements.txt /tmp/requirements.txt
+COPY pyproject.toml /tmp/pyproject.toml
+COPY uv.lock /tmp/uv.lock
 COPY install_unrar.sh /tmp/install_unrar.sh
 
-RUN pip install -U pip setuptools wheel && \
-    pip install -r /tmp/requirements.txt && \
+RUN uv sync --no-cache --locked && \
     /tmp/install_unrar.sh
 
 FROM python:3.12-alpine
 
+ENV UV_INSTALL_DIR="/uv"
 ARG VERSION="7.2.0"
 
 LABEL org.opencontainers.image.authors="EDM115 <unzip@edm115.dev>"
@@ -49,23 +52,23 @@ RUN apk update && \
         util-linux \
         zstd && \
     apk add --no-cache 7zip --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
-    python -m venv /venv && \
-    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    mkdir /app
+    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 SHELL ["/bin/bash", "-c"]
 
-ENV PATH="/venv/bin:$PATH"
+ENV PATH="$UV_INSTALL_DIR:/venv/bin:$PATH"
 ENV TZ=Europe/Paris
 
 WORKDIR /app
 
-COPY --from=build /venv /venv
+COPY --from=build /tmp/.venv /venv
 COPY --from=build /usr/local/bin/unrar /tmp/unrar
 
-RUN git clone -b v7 --single-branch https://github.com/EDM115/unzip-bot.git /app && \
+RUN git clone -b v7 https://github.com/EDM115/unzip-bot.git /app && \
     install -m 755 /tmp/unrar /usr/local/bin && \
-    rm -rf /tmp/unrar
+    rm -rf /tmp/unrar && \
+    source /venv/bin/activate
 
 COPY .env /app/.env
 

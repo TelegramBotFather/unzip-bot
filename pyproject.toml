@@ -1,0 +1,50 @@
+[project]
+name = "unzip-bot"
+version = "7.2.0"
+authors = [
+  { name="EDM115", email="unzip@edm115.dev" },
+]
+description = "A Telegram bot to extract various types of archives"
+dependencies = [
+  "aiocron==1.8",
+  "aiofiles==24.1.0",
+  "aiohttp==3.11.16",
+  "base58check==1.0.2",
+  "dnspython==2.7.0",
+  "gitdb==4.0.12",
+  "GitPython==3.1.44",
+  "motor==3.7.0",
+  "mutagen==1.47.0",
+  "Pillow==11.2.0",
+  "psutil==7.0.0",
+  "pykeyboard==0.1.5",
+  "pyrofork==2.3.61",
+  "PyTgCrypto==1.2.9.2",
+  "requests==2.32.3",
+  "setuptools==78.1.0",
+  "unzip-http==0.6",
+  "wheel==0.46.0",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+[project.scripts]
+install = "uv sync"
+install-pip = "pip install -U -r requirements.txt"
+run = "./start.sh"
+venv = "python -m venv .venv"
+
+[project.urls]
+"Homepage" = "https://github.com/EDM115/unzip-bot"
+"Bug Tracker" = "https://github.com/EDM115/unzip-bot/issues"
+"Funding" = "https://github.com/EDM115#support-me-"
+
+[tool.uv]
+compile-bytecode = true
+link-mode = "copy"
+
+[tool.uv.pip]
+compile-bytecode = true
+generate-hashes = true
+link-mode = "copy"
