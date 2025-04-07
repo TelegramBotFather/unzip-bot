@@ -39,6 +39,17 @@
   "editor.suggestSelection": "first",
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": true,
+  "explorer.fileNesting.patterns": {
+    ".env": ".python-version, config.py",
+    ".gitignore": ".deepsource.toml, .whitesource, AUTHORS, CONTRIBUTORS.svg, renovate.json",
+    "Dockerfile": ".dockerignore, requirements.txt",
+    "heroku.yml": "app.json",
+    "package.json": "package-lock.json, pnpm*",
+    "README.md": "LICENSE, CHANGELOG.md, CreateMongoDB.md, bot_thumb.jpg",
+    "start.sh": "install_unrar.sh"
+  },
   "files.autoSave": "afterDelay",
   "files.eol": "\n",
   "files.insertFinalNewline": true,
