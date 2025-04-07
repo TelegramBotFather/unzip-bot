@@ -9,9 +9,6 @@ __pycache__/
 env/
 venv/
 
-# VS Code
-.vscode/
-
 # SonarQube
 .scannerwork/
 
