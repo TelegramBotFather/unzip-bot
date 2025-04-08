@@ -1,7 +1,6 @@
 import logging
 import time
 
-# from pyromod import Client
 from pyrogram import Client
 
 from config import Config

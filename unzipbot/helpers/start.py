@@ -80,7 +80,8 @@ async def dl_thumbs():
                     )
                 except:
                     # Here we could encounter 400 FILE_REFERENCE_EXPIRED
-                    # A possible fix is to retrieve the message again with chat ID + message ID to get a refreshed file reference
+                    # A possible fix is to retrieve the message again with chat ID
+                    # + message ID to get a refreshed file reference
                     await unzipbot_client.send_message(
                         thumb.get("_id"),
                         messages.get("start", "MISSING_THUMB", thumb.get("_id")),

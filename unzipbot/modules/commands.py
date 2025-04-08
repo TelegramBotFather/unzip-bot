@@ -47,7 +47,7 @@ from unzipbot.modules.ext_script.custom_thumbnail import add_thumb, del_thumb
 from unzipbot.modules.ext_script.ext_helper import get_files
 
 # Regex for urls
-https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"
+https_url_regex = r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*"  # noqa: E501
 
 messages = Messages(lang_fetcher=get_lang)
 
@@ -788,7 +788,8 @@ async def vip_help(_, message: Message):
     filters.command("dbexport") & filters.user(Config.BOT_OWNER)
 )
 async def export_db(_, message):
-    # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command to export as CSV
+    # Will use https://www.mongodb.com/docs/database-tools/mongoexport/ on command
+    # to export as CSV
     await message.reply("🚧 WIP 🚧")
 
 
@@ -857,7 +858,10 @@ async def eval_command(_, message):
     else:
         evaluation = "Success"
 
-    final_output = f"<b>EVAL</b> : <code>{cmd}</code>\n\n<b>OUTPUT</b> :\n<code>{evaluation}</code> \n"
+    final_output = (
+        f"<b>EVAL</b> : <code>{cmd}</code>\n\n"
+        f"<b>OUTPUT</b> :\n<code>{evaluation}</code> \n"
+    )
 
     if len(final_output) > Config.MAX_MESSAGE_LENGTH:
         trimmed_output = f"EVAL : {cmd}\n\nOUTPUT :\n{evaluation}"

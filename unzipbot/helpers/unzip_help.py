@@ -47,13 +47,27 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
         elif round(diff % 10.00) == 0 or current == total:
             percentage = current * 100 / total
             speed = current / diff
-            time_to_completion = round((total - current) / speed) * 1000
-            estimated_total_time = time_to_completion
+            estimated_total_time = round((total - current) / speed) * 1000
             estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-            progress = f"[{''.join(['⬢' for i in range(math.floor(percentage / 5))])}{''.join(['⬡' for i in range(20 - math.floor(percentage / 5))])}] \n{messages.get('unzip_help', 'PROCESSING', uid)} : `{round(percentage, 2)}%`\n"
+            filled = ''.join(['⬢' for _ in range(math.floor(percentage / 5))])
+            empty = ''.join(['⬡' for _ in range(20 - math.floor(percentage / 5))])
+            progress = f"[{filled}{empty}] \n"
+            progress += (
+                f"{messages.get('unzip_help', 'PROCESSING', uid)} : "
+                f"`{round(percentage, 2)}%`\n"
+            )
+            eta = (
+                estimated_total_time
+                if estimated_total_time != '' or percentage != '100'
+                else '0 s'
+            )
             tmp = (
                 progress
-                + f"`{humanbytes(current)} of {humanbytes(total)}`\n{messages.get('unzip_help', 'SPEED', uid)} `{humanbytes(speed)}/s`\n{messages.get('unzip_help', 'ETA', uid)} `{estimated_total_time if estimated_total_time != '' or percentage != '100' else '0 s'}`\n"
+                + f"`{humanbytes(current)} of {humanbytes(total)}`\n"
+                + f"{messages.get('unzip_help', 'SPEED', uid)} "
+                + f"`{humanbytes(speed)}/s`\n"
+                + f"{messages.get('unzip_help', 'ETA', uid)} "
+                + f"`{eta}`\n"
             )
 
             try:
@@ -79,13 +93,27 @@ async def progress_urls(current, total, ud_type, message, start):
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
         speed = current / diff
-        time_to_completion = round((total - current) / speed) * 1000
-        estimated_total_time = time_to_completion
+        estimated_total_time = round((total - current) / speed) * 1000
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
-        progress = f"[{''.join(['⬢' for i in range(math.floor(percentage / 5))])}{''.join(['⬡' for i in range(20 - math.floor(percentage / 5))])}] \n{messages.get('unzip_help', 'PROCESSING', uid)} : `{round(percentage, 2)}%`\n"
+        filled = ''.join(['⬢' for _ in range(math.floor(percentage / 5))])
+        empty = ''.join(['⬡' for _ in range(20 - math.floor(percentage / 5))])
+        progress = f"[{filled}{empty}] \n"
+        progress += (
+            f"{messages.get('unzip_help', 'PROCESSING', uid)} : "
+            f"`{round(percentage, 2)}%`\n"
+        )
+        eta = (
+            estimated_total_time
+            if estimated_total_time != '' or percentage != '100'
+            else '0 s'
+        )
         tmp = (
             progress
-            + f"{messages.get('unzip_help', 'ETA', uid)} `{estimated_total_time if estimated_total_time != '' or percentage != '100' else '0 s'}`\n"
+            + f"`{humanbytes(current)} of {humanbytes(total)}`\n"
+            + f"{messages.get('unzip_help', 'SPEED', uid)} "
+            + f"`{humanbytes(speed)}/s`\n"
+            + f"{messages.get('unzip_help', 'ETA', uid)} "
+            + f"`{eta}`\n"
         )
 
         try:

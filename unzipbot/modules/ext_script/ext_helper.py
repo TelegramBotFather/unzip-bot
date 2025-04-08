@@ -90,7 +90,8 @@ async def __extract_with_7z_helper(path, archive_path, password=None):
 
 
 async def test_with_7z_helper(archive_path):
-    password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
+    # skipcq: PTC-W1006, SCT-A000
+    password = "dont care + didnt ask + cry about it + stay mad + get real + L"
     cmd = ["7z", "t", f"-p{quote(password)}", quote(archive_path), "-y"]
     result = await run_shell_cmds(" ".join(cmd))
 
@@ -118,7 +119,8 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
 
 
 async def test_with_unrar_helper(archive_path):
-    password = "dont care + didnt ask + cry about it + stay mad + get real + L"  # skipcq: PTC-W1006, SCT-A000
+    # skipcq: PTC-W1006, SCT-A000
+    password = "dont care + didnt ask + cry about it + stay mad + get real + L"
     cmd = ["unrar", "t", quote(archive_path), f"-p{quote(password)}", "-y"]
     result = await run_shell_cmds(" ".join(cmd))
 
