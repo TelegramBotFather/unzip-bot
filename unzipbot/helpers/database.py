@@ -172,14 +172,7 @@ async def check_user(message):
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=messages.get(
-                        "database",
-                        "NEW_USER",
-                        uid,
-                        uname,
-                        umention,
-                        uid,
-                        uid,
-                        uid,
+                        "database", "NEW_USER", uid, [uname, umention, uid, uid, uid]
                     ),
                     disable_web_page_preview=False,
                 )
@@ -188,14 +181,7 @@ async def check_user(message):
                 await unzipbot_client.send_message(
                     chat_id=Config.LOGS_CHANNEL,
                     text=messages.get(
-                        "database",
-                        "NEW_USER",
-                        uid,
-                        uname,
-                        umention,
-                        uid,
-                        uid,
-                        uid,
+                        "database", "NEW_USER", uid, [uname, umention, uid, uid, uid]
                     ),
                     disable_web_page_preview=False,
                 )

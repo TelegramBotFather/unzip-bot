@@ -127,7 +127,7 @@ class Buttons:
                 InlineKeyboardButton(
                     messages.get("buttons", "AS_MEDIA"), callback_data="set_mode|media"
                 ),
-            ],
+            ]
         ]
     )
 
@@ -227,7 +227,7 @@ class Buttons:
                 InlineKeyboardButton(
                     messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"
                 ),
-            ],
+            ]
         ]
     )
 
@@ -240,6 +240,6 @@ class Buttons:
                 InlineKeyboardButton(
                     messages.get("buttons", "DONATE"), callback_data="donatecallback"
                 ),
-            ],
+            ]
         ]
     )

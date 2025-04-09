@@ -257,8 +257,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             )
         text_stats = await get_stats(query.from_user.id)
         await query.edit_message_text(
-            text=text_stats,
-            reply_markup=Buttons.REFRESH_BUTTON,
+            text=text_stats, reply_markup=Buttons.REFRESH_BUTTON
         )
 
     elif query.data == "canceldownload":
@@ -440,7 +439,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     file_name=location,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        messages.get("callbacks", "DL_FILES", uid, i, length),
+                        messages.get("callbacks", "DL_FILES", uid, [i, length]),
                         merge_msg,
                         s_time,
                         unzip_bot,
@@ -454,7 +453,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 dltime = "1 s"
 
             await merge_msg.edit(
-                messages.get("callbacks", "AFTER_OK_MERGE_DL_TXT", uid, i, dltime)
+                messages.get("callbacks", "AFTER_OK_MERGE_DL_TXT", uid, [i, dltime])
             )
             await merge_msg.edit(
                 text=messages.get("callbacks", "CHOOSE_EXT_MODE_MERGE", uid),
@@ -499,8 +498,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 "callbacks",
                 "PROCESS_MERGE",
                 None,
-                user_id,
-                ".".join(file.split("/")[-1].split(".")[:-1]),
+                [user_id, ".".join(file.split("/")[-1].split(".")[:-1])],
             ),
         )
 
@@ -708,7 +706,10 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                         await log_msg.edit(
                             messages.get(
-                                "callbacks", "LOG_TXT", None, user_id, url, u_file_size
+                                "callbacks",
+                                "LOG_TXT",
+                                None,
+                                [user_id, url, u_file_size],
                             )
                         )
                         archive_msg = log_msg
@@ -867,7 +868,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 except Exception as e:
                                     LOGGER.error(
                                         messages.get(
-                                            "callbacks", "UNZIP_HTTP", None, url, e
+                                            "callbacks", "UNZIP_HTTP", None, [url, e]
                                         )
                                     )
 
@@ -922,9 +923,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         "callbacks",
                         "LOG_TXT",
                         None,
-                        user_id,
-                        fname,
-                        humanbytes(r_message.document.file_size),
+                        [user_id, fname, humanbytes(r_message.document.file_size)],
                     )
                 )
 
@@ -1103,9 +1102,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                 )
                 ext_s_time = time()
                 extractor = await extr_files(
-                    path=ext_files_dir,
-                    archive_path=archive,
-                    password=password.text,
+                    path=ext_files_dir, archive_path=archive, password=password.text
                 )
                 ext_e_time = time()
                 await archive_msg.reply(

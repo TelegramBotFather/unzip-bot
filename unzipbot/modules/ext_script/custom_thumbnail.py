@@ -53,7 +53,7 @@ async def add_thumb(_, message):
                     chat_id=Config.LOGS_CHANNEL,
                     photo=final_thumb,
                     caption=messages.get(
-                        "custom_thumbnail", "THUMB_CAPTION", uid, user_id, user_id
+                        "custom_thumbnail", "THUMB_CAPTION", uid, [user_id, user_id]
                     ),
                 )
 

@@ -39,15 +39,14 @@ class Messages:
             ) as f:
                 return json.load(f)
 
-    def get(self, file, key, user_id=None, *args, **kwargs):
+    def get(self, file, key, user_id=None, extra_args=[]):
         """
         Retrieve and format a message by its file and key
 
         :param file: The name of the file in the JSON structure
         :param key: The key within the file to retrieve
         :param user_id: The user's ID (used to fetch the preferred language)
-        :param args: Positional arguments for string formatting
-        :param kwargs: Keyword arguments for string formatting
+        :param extra_args: Additional arguments for string formatting
         :return: The formatted message string
         """
         lang = self.lang_fetcher(user_id) if user_id else self.default_lang
@@ -58,4 +57,7 @@ class Messages:
         except KeyError:
             message = self.__load_language_file(self.default_lang)[file][key.lower()]
 
-        return message.format(*args, **kwargs)
+        if not isinstance(extra_args, list):
+            extra_args = [extra_args]
+
+        return message.format(*extra_args)

@@ -38,9 +38,7 @@ async def async_shutdown_bot():
         with open("unzip-bot.log", "rb") as doc_f:
             try:
                 await unzipbot_client.send_document(
-                    chat_id=Config.LOGS_CHANNEL,
-                    document=doc_f,
-                    file_name=doc_f.name,
+                    chat_id=Config.LOGS_CHANNEL, document=doc_f, file_name=doc_f.name
                 )
             except:
                 pass
@@ -57,9 +55,7 @@ def handle_stop_signals(signum, frame):
             "main",
             "RECEIVED_STOP_SIGNAL",
             None,
-            signal.Signals(signum).name,
-            signum,
-            frame,
+            [signal.Signals(signum).name, signum, frame],
         )
     )
     loop = asyncio.get_event_loop()

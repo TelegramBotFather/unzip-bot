@@ -85,7 +85,7 @@ async def _(_, message: Message):
                 await message.reply(
                     text=messages.get(
                         "commands", "MAX_TASKS", uid, Config.MAX_CONCURRENT_TASKS
-                    ),
+                    )
                 )
             except:
                 await unzipbot_client.send_message(
@@ -201,14 +201,16 @@ async def extract_archive(_, message: Message):
 
         if message.text and (re.match(https_url_regex, message.text)):
             await unzip_msg.edit(
-                text=messages.get("commands", "CHOOSE_EXT_MODE", user_id, "URL", "🔗"),
+                text=messages.get(
+                    "commands", "CHOOSE_EXT_MODE", user_id, ["URL", "🔗"]
+                ),
                 reply_markup=Buttons.CHOOSE_E_U__BTNS,
             )
         elif message.document:
             if sufficient_disk_space(message.document.file_size):
                 await unzip_msg.edit(
                     text=messages.get(
-                        "commands", "CHOOSE_EXT_MODE", user_id, "file", "🗂️"
+                        "commands", "CHOOSE_EXT_MODE", user_id, ["file", "🗂️"]
                     ),
                     reply_markup=Buttons.CHOOSE_E_F__BTNS,
                 )
@@ -294,32 +296,36 @@ async def get_stats(id):
             "commands",
             "STATS_OWNER",
             id,
-            total_users,
-            total_banned_users,
-            total,
-            used,
-            disk_usage,
-            free,
-            ongoing_tasks,
-            sent,
-            recv,
-            cpu_usage,
-            ram_usage,
-            uptime,
+            [
+                total_users,
+                total_banned_users,
+                total,
+                used,
+                disk_usage,
+                free,
+                ongoing_tasks,
+                sent,
+                recv,
+                cpu_usage,
+                ram_usage,
+                uptime,
+            ],
         )
     else:
         stats_string = messages.get(
             "commands",
             "STATS",
             id,
-            total,
-            used,
-            disk_usage,
-            free,
-            ongoing_tasks,
-            cpu_usage,
-            ram_usage,
-            uptime,
+            [
+                total,
+                used,
+                disk_usage,
+                free,
+                ongoing_tasks,
+                cpu_usage,
+                ram_usage,
+                uptime,
+            ],
         )
 
     return stats_string
@@ -371,7 +377,7 @@ async def broadcast_this(_, message: Message):
     failed_no = 0
     done_no = 0
     total_users = await count_users()
-    await bc_msg.edit(messages.get("commands", "BC_START", uid, done_no, total_users))
+    await bc_msg.edit(messages.get("commands", "BC_START", uid, [done_no, total_users]))
 
     for user in users_list:
         b_cast = await __do_broadcast(message=r_msg, user=user.get("user_id"))
@@ -386,31 +392,21 @@ async def broadcast_this(_, message: Message):
         if done_no % 10 == 0 or done_no == total_users:
             try:
                 await bc_msg.edit(
-                    messages.get("commands", "BC_START", uid, done_no, total_users)
+                    messages.get("commands", "BC_START", uid, [done_no, total_users])
                 )
             except (FloodWait, FloodPremiumWait):
                 pass
     try:
         await bc_msg.edit(
             messages.get(
-                "commands",
-                "BC_DONE",
-                uid,
-                total_users,
-                success_no,
-                failed_no,
+                "commands", "BC_DONE", uid, [total_users, success_no, failed_no]
             )
         )
     except (FloodWait, FloodPremiumWait) as f:
         await sleep(f.value)
         await bc_msg.edit(
             messages.get(
-                "commands",
-                "BC_DONE",
-                uid,
-                total_users,
-                success_no,
-                failed_no,
+                "commands", "BC_DONE", uid, [total_users, success_no, failed_no]
             )
         )
 
@@ -456,7 +452,7 @@ async def report_this(_, message: Message):
     await sd_msg.edit(messages.get("commands", "SENDING", uid))
     await unzipbot_client.send_message(
         chat_id=Config.LOGS_CHANNEL,
-        text=messages.get("commands", "REPORT_TEXT", uid, uid, r_msg.text.markdown),
+        text=messages.get("commands", "REPORT_TEXT", uid, [uid, r_msg.text.markdown]),
     )
     await sd_msg.edit(messages.get("commands", "REPORT_DONE", uid))
 
@@ -545,7 +541,7 @@ async def info_user(_, message: Message):
         up_count = messages.get("commands", "UNABLE_FETCH", uid)
 
     await info_user_msg.edit(
-        messages.get("commands", "USER_INFO", uid, user_id, up_count)
+        messages.get("commands", "USER_INFO", uid, [user_id, up_count])
     )
 
 
@@ -574,7 +570,7 @@ async def info_user2(_, message: Message):
         except:
             pass
 
-    await user2_msg.edit(messages.get("commands", "USER2_INFO", uid, infos, user_id))
+    await user2_msg.edit(messages.get("commands", "USER2_INFO", uid, [infos, user_id]))
 
 
 @unzipbot_client.on_message(filters.command("self") & filters.user(Config.BOT_OWNER))
@@ -705,17 +701,13 @@ async def send_logs(user_id):
 
         try:
             message = await unzipbot_client.send_document(
-                chat_id=user_id,
-                document=doc_f,
-                file_name=doc_f.name,
+                chat_id=user_id, document=doc_f, file_name=doc_f.name
             )
             LOGGER.info(messages.get("commands", "LOG_SENT", None, user_id))
         except (FloodWait, FloodPremiumWait) as f:
             await sleep(f.value)
             message = await unzipbot_client.send_document(
-                chat_id=user_id,
-                document=doc_f,
-                file_name=doc_f.name,
+                chat_id=user_id, document=doc_f, file_name=doc_f.name
             )
         except RPCError as e:
             await unzipbot_client.send_message(chat_id=user_id, text=e)
@@ -870,9 +862,7 @@ async def eval_command(_, message):
             out_file.write(str(trimmed_output))
 
         await message.reply_document(
-            document="eval.txt",
-            caption=cmd,
-            reply_to_message_id=message.id,
+            document="eval.txt", caption=cmd, reply_to_message_id=message.id
         )
         await status_message.delete()
         os.remove("eval.txt")
@@ -917,9 +907,7 @@ async def exec_command(_, message):
         with io.BytesIO(str.encode(T_OUTPUT)) as out_file:
             out_file.name = "exec.txt"
             await message.reply_document(
-                document=out_file,
-                caption=f"`{cmd}`",
-                reply_to_message_id=message.id,
+                document=out_file, caption=f"`{cmd}`", reply_to_message_id=message.id
             )
     else:
         await message.reply_text(OUTPUT)

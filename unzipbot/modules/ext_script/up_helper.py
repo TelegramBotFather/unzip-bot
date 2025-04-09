@@ -334,7 +334,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
         await unzip_bot.send_document(
             chat_id=c_id,
             document=doc_f,
-            caption=messages.get("up_helper", "LOG_CAPTION", c_id, fname, source),
+            caption=messages.get("up_helper", "LOG_CAPTION", c_id, [fname, source]),
             disable_notification=True,
             progress=progress_urls,
             progress_args=(

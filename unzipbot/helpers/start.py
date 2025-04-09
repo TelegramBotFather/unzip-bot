@@ -75,8 +75,7 @@ async def dl_thumbs():
             if thumb.get("url") is None and thumb.get("file_id") is not None:
                 try:
                     await unzipbot_client.download_media(
-                        message=thumb.get("file_id"),
-                        file_name=file_path,
+                        message=thumb.get("file_id"), file_name=file_path
                     )
                 except:
                     # Here we could encounter 400 FILE_REFERENCE_EXPIRED
@@ -95,7 +94,9 @@ async def dl_thumbs():
         i += 1
 
         if i % 10 == 0 or i == maxthumbs:
-            LOGGER.info(messages.get("start", "DOWNLOADED_THUMBS", None, i, maxthumbs))
+            LOGGER.info(
+                messages.get("start", "DOWNLOADED_THUMBS", None, [i, maxthumbs])
+            )
 
 
 async def set_boot_time():
@@ -114,8 +115,12 @@ async def set_boot_time():
                     "start",
                     "BOT_RESTARTED",
                     Config.BOT_OWNER,
-                    datetime.fromtimestamp(old_boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
-                    datetime.fromtimestamp(boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
+                    [
+                        datetime.fromtimestamp(old_boot).strftime(
+                            r"%d/%m/%Y - %H:%M:%S"
+                        ),
+                        datetime.fromtimestamp(boot).strftime(r"%d/%m/%Y - %H:%M:%S"),
+                    ],
                 ),
             )
         except:

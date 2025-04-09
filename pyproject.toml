@@ -55,6 +55,9 @@ skip-magic-trailing-comma = true
 logger-objects = ["unzipbot.LOGGER"]
 select = ["E", "F", "I", "W"]
 
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
+
 [tool.uv]
 compile-bytecode = true
 link-mode = "copy"
