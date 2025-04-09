@@ -19,18 +19,20 @@ messages = Messages(lang_fetcher=get_lang)
 async def get_files(path):
     path_list = [
         val
-        for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk(path)]
+        for sublist in [
+            [os.path.join(i[0], j) for j in i[2]] for i in os.walk(top=path)
+        ]
         for val in sublist
-    ]  # skipcq: FLK-E501
+    ]
 
     return sorted(path_list)
 
 
 async def cleanup_macos_artifacts(extraction_path):
-    for root, dirs, files in os.walk(extraction_path):
+    for root, dirs, files in os.walk(top=extraction_path):
         for name in files:
             if name == ".DS_Store":
-                os.remove(os.path.join(root, name))
+                os.remove(path=os.path.join(root, name))
         for name in dirs:
             if name == "__MACOSX":
                 shutil.rmtree(os.path.join(root, name))
@@ -52,25 +54,25 @@ async def run_shell_cmds(command):
     ]
     ulimit_command = " ".join(ulimit_cmd)
     process = await create_subprocess_shell(
-        ulimit_command,
+        cmd=ulimit_command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         executable="/bin/bash",
     )
     stdout, stderr = await process.communicate()
 
-    e = stderr.decode("utf-8", errors="replace")
-    o = stdout.decode("utf-8", errors="replace")
-    LOGGER.info(f"command : {command}")
-    LOGGER.info(f"stdout : {o}")
-    LOGGER.info(f"stderr : {e}")
+    e = stderr.decode(encoding="utf-8", errors="replace")
+    o = stdout.decode(encoding="utf-8", errors="replace")
+    LOGGER.info(msg=f"command : {command}")
+    LOGGER.info(msg=f"stdout : {o}")
+    LOGGER.info(msg=f"stderr : {e}")
 
     return o + "\n" + e
 
 
 # Extract with 7z
 async def __extract_with_7z_helper(path, archive_path, password=None):
-    LOGGER.info("7z : " + archive_path + " : " + path)
+    LOGGER.info(msg="7z : " + archive_path + " : " + path)
 
     if password:
         cmd = [
@@ -99,7 +101,7 @@ async def test_with_7z_helper(archive_path):
 
 
 async def __extract_with_unrar_helper(path, archive_path, password=None):
-    LOGGER.info("unrar : " + archive_path + " : " + path)
+    LOGGER.info(msg="unrar : " + archive_path + " : " + path)
 
     if password:
         cmd = [
@@ -137,13 +139,15 @@ async def __extract_with_zstd(path, archive_path):
 
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
-    os.makedirs(path, exist_ok=True)
+    os.makedirs(name=path, exist_ok=True)
 
     if archive_path.endswith(tarball_extensions):
-        LOGGER.info("tar")
+        LOGGER.info(msg="tar")
         temp_path = path.rsplit("/", 1)[0] + "/tar_temp"
-        os.makedirs(temp_path, exist_ok=True)
-        result = await __extract_with_7z_helper(temp_path, archive_path)
+        os.makedirs(name=temp_path, exist_ok=True)
+        result = await __extract_with_7z_helper(
+            path=temp_path, archive_path=archive_path
+        )
         filename = await get_files(temp_path)
         filename = filename[0]
         cmd = ["tar", "-xvf", quote(filename), "-C", quote(path)]
@@ -151,21 +155,27 @@ async def extr_files(path, archive_path, password=None):
         result += result2
         shutil.rmtree(temp_path)
     elif archive_path.endswith((".tar.zst", ".zst", ".tzst")):
-        LOGGER.info("zstd")
-        os.mkdir(path)
-        result = await __extract_with_zstd(path, archive_path)
+        LOGGER.info(msg="zstd")
+        os.mkdir(path=path)
+        result = await __extract_with_zstd(path=path, archive_path=archive_path)
     elif archive_path.endswith(".rar"):
-        LOGGER.info("rar")
+        LOGGER.info(msg="rar")
 
         if password:
-            result = await __extract_with_unrar_helper(path, archive_path, password)
+            result = await __extract_with_unrar_helper(
+                path=path, archive_path=archive_path, password=password
+            )
         else:
-            result = await __extract_with_unrar_helper(path, archive_path)
+            result = await __extract_with_unrar_helper(
+                path=path, archive_path=archive_path
+            )
     else:
-        LOGGER.info("normal archive")
-        result = await __extract_with_7z_helper(path, archive_path, password)
+        LOGGER.info(msg="normal archive")
+        result = await __extract_with_7z_helper(
+            path=path, archive_path=archive_path, password=password
+        )
 
-    LOGGER.info(await get_files(path))
+    LOGGER.info(msg=await get_files(path))
     await cleanup_macos_artifacts(path)
 
     return result
@@ -174,7 +184,7 @@ async def extr_files(path, archive_path, password=None):
 # Split files
 async def split_files(iinput, ooutput, size):
     temp_location = iinput + "_temp"
-    shutil.move(iinput, temp_location)
+    shutil.move(src=iinput, dst=temp_location)
     cmd = [
         "7z",
         "a",
@@ -194,9 +204,13 @@ async def split_files(iinput, ooutput, size):
 # Merge files
 async def merge_files(iinput, ooutput, file_type, password=None):
     if file_type == "volume":
-        result = await __extract_with_7z_helper(ooutput, iinput, password)
+        result = await __extract_with_7z_helper(
+            path=ooutput, archive_path=iinput, password=password
+        )
     elif file_type == "rar":
-        result = await __extract_with_unrar_helper(ooutput, iinput, password)
+        result = await __extract_with_unrar_helper(
+            path=ooutput, archive_path=iinput, password=password
+        )
 
     return result
 
@@ -210,21 +224,22 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     if unziphttp:
         data.append(
             InlineKeyboardButton(
-                messages.get("ext_helper", "UP_ALL", user_id),
-                f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}",
+                text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id),
+                callback_data=f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}",
             )
         )
     else:
         data.append(
             InlineKeyboardButton(
-                messages.get("ext_helper", "UP_ALL", user_id),
-                f"ext_a|{user_id}|{chat_id}|{unziphttp}",
+                text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id),
+                callback_data=f"ext_a|{user_id}|{chat_id}|{unziphttp}",
             )
         )
 
     data.append(
         InlineKeyboardButton(
-            messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis"
+            text=messages.get(file="ext_helper", key="CANCEL_IT", user_id=user_id),
+            callback_data="cancel_dis",
         )
     )
 
@@ -235,19 +250,19 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
         if unziphttp:
             data.append(
                 InlineKeyboardButton(
-                    f"{num} - {os.path.basename(file)}".encode(
-                        "utf-8", errors="surrogateescape"
-                    ).decode("utf-8", errors="surrogateescape"),
-                    f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
+                    text=f"{num} - {os.path.basename(file)}".encode(
+                        encoding="utf-8", errors="surrogateescape"
+                    ).decode(encoding="utf-8", errors="surrogateescape"),
+                    callback_data=f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}|{rzfile}",
                 )
             )
         else:
             data.append(
                 InlineKeyboardButton(
-                    f"{num} - {os.path.basename(file)}".encode(
-                        "utf-8", errors="surrogateescape"
-                    ).decode("utf-8", errors="surrogateescape"),
-                    f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
+                    text=f"{num} - {os.path.basename(file)}".encode(
+                        encoding="utf-8", errors="surrogateescape"
+                    ).decode(encoding="utf-8", errors="surrogateescape"),
+                    callback_data=f"ext_f|{user_id}|{chat_id}|{num}|{unziphttp}",
                 )
             )
 
@@ -265,21 +280,22 @@ async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     if unziphttp:
         data.append(
             InlineKeyboardButton(
-                messages.get("ext_helper", "UP_ALL", user_id),
-                f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}",
+                text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id),
+                callback_data=f"ext_a|{user_id}|{chat_id}|{unziphttp}|{rzfile}",
             )
         )
     else:
         data.append(
             InlineKeyboardButton(
-                messages.get("ext_helper", "UP_ALL", user_id),
-                f"ext_a|{user_id}|{chat_id}|{unziphttp}",
+                text=messages.get(file="ext_helper", key="UP_ALL", user_id=user_id),
+                callback_data=f"ext_a|{user_id}|{chat_id}|{unziphttp}",
             )
         )
 
     data.append(
         InlineKeyboardButton(
-            messages.get("ext_helper", "CANCEL_IT", user_id), "cancel_dis"
+            text=messages.get(file="ext_helper", key="CANCEL_IT", user_id=user_id),
+            callback_data="cancel_dis",
         )
     )
 

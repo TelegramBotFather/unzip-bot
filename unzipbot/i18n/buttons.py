@@ -13,18 +13,22 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "HELP"), callback_data="helpcallback"
+                    text=messages.get(file="buttons", key="HELP"),
+                    callback_data="helpcallback",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "ABOUT"), callback_data="aboutcallback"
+                    text=messages.get(file="buttons", key="ABOUT"),
+                    callback_data="aboutcallback",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "STATS_BTN"), callback_data="statscallback"
+                    text=messages.get(file="buttons", key="STATS_BTN"),
+                    callback_data="statscallback",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "DONATE"), callback_data="donatecallback"
+                    text=messages.get(file="buttons", key="DONATE"),
+                    callback_data="donatecallback",
                 ),
             ],
         ]
@@ -34,11 +38,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "REFRESH"),
+                    text=messages.get(file="buttons", key="REFRESH"),
                     callback_data="statscallback|refresh",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "BACK"), callback_data="megoinhome"
+                    text=messages.get(file="buttons", key="BACK"),
+                    callback_data="megoinhome",
                 ),
             ]
         ]
@@ -47,50 +52,60 @@ class Buttons:
     CHOOSE_E_F__BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("🗂️", callback_data="extract_file|tg_file|no_pass"),
                 InlineKeyboardButton(
-                    "🔐", callback_data="extract_file|tg_file|with_pass"
+                    text="🗂️", callback_data="extract_file|tg_file|no_pass"
+                ),
+                InlineKeyboardButton(
+                    text="🔐", callback_data="extract_file|tg_file|with_pass"
                 ),
             ],
             [
-                InlineKeyboardButton("🖼️", callback_data="extract_file|tg_file|thumb"),
                 InlineKeyboardButton(
-                    "✏", callback_data="extract_file|tg_file|thumbrename"
+                    text="🖼️", callback_data="extract_file|tg_file|thumb"
+                ),
+                InlineKeyboardButton(
+                    text="✏", callback_data="extract_file|tg_file|thumbrename"
                 ),
             ],
-            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+            [InlineKeyboardButton(text="❌", callback_data="cancel_dis")],
         ]
     )
 
     CHOOSE_E_F_M__BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("🗂️", callback_data="merged|no_pass"),
-                InlineKeyboardButton("🔐", callback_data="merged|with_pass"),
+                InlineKeyboardButton(text="🗂️", callback_data="merged|no_pass"),
+                InlineKeyboardButton(text="🔐", callback_data="merged|with_pass"),
             ],
-            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+            [InlineKeyboardButton(text="❌", callback_data="cancel_dis")],
         ]
     )
 
     CHOOSE_E_U__BTNS = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("🔗", callback_data="extract_file|url|no_pass"),
-                InlineKeyboardButton("🔐", callback_data="extract_file|url|with_pass"),
+                InlineKeyboardButton(
+                    text="🔗", callback_data="extract_file|url|no_pass"
+                ),
+                InlineKeyboardButton(
+                    text="🔐", callback_data="extract_file|url|with_pass"
+                ),
             ],
             [
-                InlineKeyboardButton("🖼️", callback_data="extract_file|url|thumb"),
-                InlineKeyboardButton("✏", callback_data="extract_file|url|thumbrename"),
+                InlineKeyboardButton(text="🖼️", callback_data="extract_file|url|thumb"),
+                InlineKeyboardButton(
+                    text="✏", callback_data="extract_file|url|thumbrename"
+                ),
             ],
-            [InlineKeyboardButton("❌", callback_data="cancel_dis")],
+            [InlineKeyboardButton(text="❌", callback_data="cancel_dis")],
         ]
     )
 
     RENAME = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("✏", callback_data="renameit"),
-                InlineKeyboardButton("🙅‍♂️", callback_data="norename"),
+                InlineKeyboardButton(text="✏", callback_data="renameit"),
+                InlineKeyboardButton(text="🙅‍♂️", callback_data="norename"),
             ]
         ]
     )
@@ -99,10 +114,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "CLEAN"), callback_data="cancel_dis"
+                    text=messages.get(file="buttons", key="CLEAN"),
+                    callback_data="cancel_dis",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="nobully"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="nobully",
                 ),
             ]
         ]
@@ -112,7 +129,8 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "BACK"), callback_data="megoinhome"
+                    text=messages.get(file="buttons", key="BACK"),
+                    callback_data="megoinhome",
                 )
             ]
         ]
@@ -122,10 +140,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "AS_DOC"), callback_data="set_mode|doc"
+                    text=messages.get(file="buttons", key="AS_DOC"),
+                    callback_data="set_mode|doc",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "AS_MEDIA"), callback_data="set_mode|media"
+                    text=messages.get(file="buttons", key="AS_MEDIA"),
+                    callback_data="set_mode|media",
                 ),
             ]
         ]
@@ -135,7 +155,8 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="canceldownload"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="canceldownload",
                 )
             ]
         ]
@@ -145,10 +166,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "MERGE_BTN"), callback_data="merge_this"
+                    text=messages.get(file="buttons", key="MERGE_BTN"),
+                    callback_data="merge_this",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="cancel_dis"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="cancel_dis",
                 ),
             ]
         ]
@@ -158,16 +181,18 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "CHECK"), callback_data="check_thumb"
+                    text=messages.get(file="buttons", key="CHECK"),
+                    callback_data="check_thumb",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "REPLACE"),
+                    text=messages.get(file="buttons", key="REPLACE"),
                     callback_data="save_thumb|replace",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="nope_thumb",
                 )
             ],
         ]
@@ -177,11 +202,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "REPLACE"),
+                    text=messages.get(file="buttons", key="REPLACE"),
                     callback_data="save_thumb|replace",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="nope_thumb",
                 ),
             ]
         ]
@@ -191,10 +217,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "SAVE"), callback_data="save_thumb|save"
+                    text=messages.get(file="buttons", key="SAVE"),
+                    callback_data="save_thumb|save",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="nope_thumb",
                 ),
             ]
         ]
@@ -204,15 +232,18 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "CHECK"), callback_data="check_before_del"
+                    text=messages.get(file="buttons", key="CHECK"),
+                    callback_data="check_before_del",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "DELETE"), callback_data="del_thumb"
+                    text=messages.get(file="buttons", key="DELETE"),
+                    callback_data="del_thumb",
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="nope_thumb",
                 )
             ],
         ]
@@ -222,10 +253,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "DELETE"), callback_data="del_thumb"
+                    text=messages.get(file="buttons", key="DELETE"),
+                    callback_data="del_thumb",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "CANCEL_IT"), callback_data="nope_thumb"
+                    text=messages.get(file="buttons", key="CANCEL_IT"),
+                    callback_data="nope_thumb",
                 ),
             ]
         ]
@@ -235,10 +268,12 @@ class Buttons:
         [
             [
                 InlineKeyboardButton(
-                    messages.get("buttons", "RATE"), url="https://t.me/BotsArchive/2705"
+                    text=messages.get(file="buttons", key="RATE"),
+                    url="https://t.me/BotsArchive/2705",
                 ),
                 InlineKeyboardButton(
-                    messages.get("buttons", "DONATE"), callback_data="donatecallback"
+                    text=messages.get(file="buttons", key="DONATE"),
+                    callback_data="donatecallback",
                 ),
             ]
         ]

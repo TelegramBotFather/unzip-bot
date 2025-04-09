@@ -31,13 +31,15 @@ class Messages:
         file_path = f"{self.base_path}/{lang}.json"
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                return json.load(f)
+            with open(file=file_path, mode="r", encoding="utf-8") as f:
+                return json.load(fp=f)
         except FileNotFoundError:
             with open(
-                f"{self.base_path}/{self.default_lang}.json", "r", encoding="utf-8"
+                file=f"{self.base_path}/{self.default_lang}.json",
+                mode="r",
+                encoding="utf-8",
             ) as f:
-                return json.load(f)
+                return json.load(fp=f)
 
     def get(self, file, key, user_id=None, extra_args=[]):
         """

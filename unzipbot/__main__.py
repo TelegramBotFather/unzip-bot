@@ -23,7 +23,7 @@ messages = Messages(lang_fetcher=get_lang)
 
 async def async_shutdown_bot():
     stoptime = time.strftime("%Y/%m/%d - %H:%M:%S")
-    LOGGER.info(messages.get("main", "STOP_TXT", None, stoptime))
+    LOGGER.info(msg=messages.get(file="main", key="STOP_TXT", extra_args=stoptime))
 
     tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
     [task.cancel() for task in tasks]
@@ -32,10 +32,10 @@ async def async_shutdown_bot():
     try:
         await unzipbot_client.send_message(
             chat_id=Config.LOGS_CHANNEL,
-            text=messages.get("main", "STOP_TXT", None, stoptime),
+            text=messages.get(file="main", key="STOP_TXT", extra_args=stoptime),
         )
 
-        with open("unzip-bot.log", "rb") as doc_f:
+        with open(file="unzip-bot.log", mode="rb") as doc_f:
             try:
                 await unzipbot_client.send_document(
                     chat_id=Config.LOGS_CHANNEL, document=doc_f, file_name=doc_f.name
@@ -43,78 +43,83 @@ async def async_shutdown_bot():
             except:
                 pass
     except Exception as e:
-        LOGGER.error(messages.get("main", "ERROR_SHUTDOWN_MSG", None, e))
+        LOGGER.error(
+            msg=messages.get(file="main", key="ERROR_SHUTDOWN_MSG", extra_args=e)
+        )
     finally:
         await unzipbot_client.stop()
-        LOGGER.info(messages.get("main", "BOT_STOPPED"))
+        LOGGER.info(msg=messages.get(file="main", key="BOT_STOPPED"))
 
 
 def handle_stop_signals(signum, frame):
     LOGGER.info(
-        messages.get(
-            "main",
-            "RECEIVED_STOP_SIGNAL",
-            None,
-            [signal.Signals(signum).name, signum, frame],
+        msg=messages.get(
+            file="main",
+            key="RECEIVED_STOP_SIGNAL",
+            extra_args=[signal.Signals(signum).name, signum, frame],
         )
     )
     loop = asyncio.get_event_loop()
-    loop.create_task(async_shutdown_bot())
+    loop.create_task(coro=async_shutdown_bot())
 
 
 def setup_signal_handlers():
     loop = asyncio.get_event_loop()
 
     for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, lambda s=sig: handle_stop_signals(s, None))
+        loop.add_signal_handler(
+            sig=sig, callback=lambda s=sig: handle_stop_signals(signum=s, frame=None)
+        )
 
 
 async def main():
     try:
-        os.makedirs(Config.DOWNLOAD_LOCATION, exist_ok=True)
-        os.makedirs(Config.THUMB_LOCATION, exist_ok=True)
+        os.makedirs(name=Config.DOWNLOAD_LOCATION, exist_ok=True)
+        os.makedirs(name=Config.THUMB_LOCATION, exist_ok=True)
 
         if os.path.exists(Config.LOCKFILE):
-            os.remove(Config.LOCKFILE)
+            os.remove(path=Config.LOCKFILE)
 
-        with open(Config.LOCKFILE, "w") as lock_f:
+        with open(file=Config.LOCKFILE, mode="w") as lock_f:
             lock_f.close()
 
-        LOGGER.info(messages.get("main", "STARTING_BOT"))
+        LOGGER.info(msg=messages.get(file="main", key="STARTING_BOT"))
         await unzipbot_client.start()
         starttime = time.strftime("%Y/%m/%d - %H:%M:%S")
         await unzipbot_client.send_message(
             chat_id=Config.LOGS_CHANNEL,
-            text=messages.get("main", "START_TXT", None, starttime),
+            text=messages.get(file="main", key="START_TXT", extra_args=starttime),
         )
         await set_boot_time()
-        LOGGER.info(messages.get("main", "CHECK_LOG"))
+        LOGGER.info(msg=messages.get(file="main", key="CHECK_LOG"))
 
         if await check_logs():
-            LOGGER.info(messages.get("main", "LOG_CHECKED"))
+            LOGGER.info(msg=messages.get(file="main", key="LOG_CHECKED"))
             setup_signal_handlers()
             await remove_expired_tasks(True)
             await dl_thumbs()
             await start_cron_jobs()
-            os.remove(Config.LOCKFILE)
-            LOGGER.info(messages.get("main", "BOT_RUNNING"))
+            os.remove(path=Config.LOCKFILE)
+            LOGGER.info(msg=messages.get(file="main", key="BOT_RUNNING"))
             await idle()
         else:
             try:
                 await unzipbot_client.send_message(
                     chat_id=Config.BOT_OWNER,
-                    text=messages.get("main", "WRONG_LOG", None, Config.LOGS_CHANNEL),
+                    text=messages.get(
+                        file="main", key="WRONG_LOG", extra_args=Config.LOGS_CHANNEL
+                    ),
                 )
             except:
                 pass
 
-            os.remove(Config.LOCKFILE)
+            os.remove(path=Config.LOCKFILE)
             await async_shutdown_bot()
     except Exception as e:
-        LOGGER.error(messages.get("main", "ERROR_MAIN_LOOP", None, e))
+        LOGGER.error(msg=messages.get(file="main", key="ERROR_MAIN_LOOP", extra_args=e))
     finally:
         if os.path.exists(Config.LOCKFILE):
-            os.remove(Config.LOCKFILE)
+            os.remove(path=Config.LOCKFILE)
         await async_shutdown_bot()
 
 

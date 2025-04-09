@@ -9,7 +9,7 @@ boottime = time.time()
 plugins = dict(root="modules")
 
 unzipbot_client = Client(
-    "unzip-bot",
+    name="unzip-bot",
     bot_token=Config.BOT_TOKEN,
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH,
@@ -20,7 +20,7 @@ unzipbot_client = Client(
 
 logging.basicConfig(
     level=logging.INFO,
-    handlers=[logging.FileHandler("unzip-bot.log"), logging.StreamHandler()],
+    handlers=[logging.FileHandler(filename="unzip-bot.log"), logging.StreamHandler()],
     format="%(asctime)s - %(levelname)s - %(name)s - %(threadName)s - %(message)s",
 )
 
