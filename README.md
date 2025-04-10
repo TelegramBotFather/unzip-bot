@@ -3,7 +3,7 @@
 # unzip-bot
 ## A Telegram bot to extract various types of archives
 
-<img src="https://telegra.ph/file/d4ba24682e030fc58613f.jpg" alt="unzip-bot" width="200" height="200">
+<img src="./bot_thumb.jpg" alt="unzip-bot" width="200" height="200">
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/ruff) [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![DeepSource](https://app.deepsource.com/gh/EDM115/unzip-bot.svg/?label=active+issues&show_trend=true&token=17SfwVx77dbrFlixtGdQsQNh)](https://app.deepsource.com/gh/EDM115/unzip-bot/?ref=repository-badge)
 
@@ -27,7 +27,7 @@ More info : [edm115.dev/unzip](https://edm115.dev/unzip)
 ### User side
 - Extract all formats of archives like `rar`, `zip`, `7z`, `tar.gz`, …
 - Supports password protected archives
-- Able to process splitted archives (`.001`, `.partX.rar`, …)
+- Able to process split archives (`.001`, `.partX.rar`, …)
 - Download files from links
 - Rename and set custom thumbnail for files
 - Uploads files as documents or media

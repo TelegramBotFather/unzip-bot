@@ -472,7 +472,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
         pass
 
 
-async def merge_splitted_archives(user_id, path):
+async def merge_split_archives(user_id, path):
     cmd = f'cd "{path}" && cat * > MERGED_{user_id}.zip'
     await run_shell_cmds(cmd)
 

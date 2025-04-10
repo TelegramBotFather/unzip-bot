@@ -579,7 +579,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
             return
 
-        splitted_data = query.data.split("|")
+        split_data = query.data.split("|")
         log_msg = await unzip_bot.send_message(
             chat_id=Config.LOGS_CHANNEL,
             text=messages.get(
@@ -596,7 +596,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         except:
             pass
 
-        if splitted_data[1] == "with_pass":
+        if split_data[1] == "with_pass":
             password = await unzip_bot.ask(
                 chat_id=query.message.chat.id,
                 text=messages.get(
@@ -765,7 +765,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         download_path = f"{Config.DOWNLOAD_LOCATION}/{user_id}"
         ext_files_dir = f"{download_path}/extracted"
         r_message = query.message.reply_to_message
-        splitted_data = query.data.split("|")
+        split_data = query.data.split("|")
 
         try:
             await query.message.edit(
@@ -782,7 +782,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
         global archive_msg
 
         try:
-            if splitted_data[1] == "url":
+            if split_data[1] == "url":
                 url = r_message.text
 
                 # Double check
@@ -801,9 +801,9 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         chat_id=url.split(sep="/")[-2],
                         message_ids=int(url.split(sep="/")[-1]),
                     )
-                    splitted_data[1] = "tg_file"
+                    split_data[1] = "tg_file"
 
-                if splitted_data[1] == "url":
+                if split_data[1] == "url":
                     s = ClientSession()
 
                     async with s as session:
@@ -878,7 +878,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                                 archive = f"{download_path}/{fname}"
 
                             if (
-                                splitted_data[2] not in ["thumb", "thumbrename"]
+                                split_data[2] not in ["thumb", "thumbrename"]
                                 and fext not in extentions_list["archive"]
                             ):
                                 await del_ongoing_task(user_id)
@@ -1046,7 +1046,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                             return
 
-            elif splitted_data[1] == "tg_file":
+            elif split_data[1] == "tg_file":
                 if r_message.document is None:
                     await del_ongoing_task(user_id)
                     await query.message.edit(
@@ -1072,7 +1072,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     )
                 )
 
-                if splitted_data[2] not in ["thumb", "thumbrename"]:
+                if split_data[2] not in ["thumb", "thumbrename"]:
                     fext = fname.split(sep=".")[-1].casefold()
 
                     if (
@@ -1136,13 +1136,13 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
 
                 return
 
-            if splitted_data[2].startswith("thumb"):
+            if split_data[2].startswith("thumb"):
                 await query.message.edit(
                     text=messages.get(file="callbacks", key="PROCESSING2", user_id=uid)
                 )
                 archive_name = location.split("/")[-1]
 
-                if "rename" in splitted_data[2]:
+                if "rename" in split_data[2]:
                     newname = await unzip_bot.ask(
                         chat_id=user_id,
                         text=messages.get(
@@ -1190,16 +1190,16 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         extra_args=newfname,
                     )
                 )
-                splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
-                os.makedirs(name=splitteddir, exist_ok=True)
-                ooutput = f"{splitteddir}/{newfname}"
-                splittedfiles = await split_files(
+                splitdir = f"{Config.DOWNLOAD_LOCATION}/split/{user_id}"
+                os.makedirs(name=splitdir, exist_ok=True)
+                ooutput = f"{splitdir}/{newfname}"
+                splitfiles = await split_files(
                     iinput=renamed, ooutput=ooutput, size=Config.TG_MAX_SIZE
                 )
 
-                if not splittedfiles:
+                if not splitfiles:
                     try:
-                        shutil.rmtree(splitteddir)
+                        shutil.rmtree(splitdir)
                     except:
                         pass
 
@@ -1220,22 +1220,22 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         extra_args=newfname,
                     )
                 )
-                async_splittedfiles = async_generator(splittedfiles)
+                async_splitfiles = async_generator(splitfiles)
 
-                async for file in async_splittedfiles:
+                async for file in async_splitfiles:
                     sent_files += 1
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
                         doc_f=file,
                         query=query,
-                        full_path=splitteddir,
+                        full_path=splitdir,
                         log_msg=log_msg,
                         split=True,
                     )
 
                 try:
-                    shutil.rmtree(splitteddir)
+                    shutil.rmtree(splitdir)
                     shutil.rmtree(renamed.replace(newfname, ""))
                 except:
                     pass
@@ -1278,7 +1278,7 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
             )
 
             # Attempt to fetch password protected archives
-            if splitted_data[2] == "with_pass":
+            if split_data[2] == "with_pass":
                 password = await unzip_bot.ask(
                     chat_id=query.message.chat.id,
                     text=messages.get(
@@ -1584,17 +1584,17 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     file="callbacks", key="SPLITTING", user_id=uid, extra_args=fname
                 ),
             )
-            splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
-            os.makedirs(name=splitteddir, exist_ok=True)
-            ooutput = f"{splitteddir}/{fname}"
-            splittedfiles = await split_files(
+            splitdir = f"{Config.DOWNLOAD_LOCATION}/split/{user_id}"
+            os.makedirs(name=splitdir, exist_ok=True)
+            ooutput = f"{splitdir}/{fname}"
+            splitfiles = await split_files(
                 iinput=file, ooutput=ooutput, size=Config.TG_MAX_SIZE
             )
-            LOGGER.info(msg=splittedfiles)
+            LOGGER.info(msg=splitfiles)
 
-            if not splittedfiles:
+            if not splitfiles:
                 try:
-                    shutil.rmtree(splitteddir)
+                    shutil.rmtree(splitdir)
                 except:
                     pass
 
@@ -1613,22 +1613,22 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                     extra_args=fname,
                 )
             )
-            async_splittedfiles = async_generator(splittedfiles)
+            async_splitfiles = async_generator(splitfiles)
 
-            async for file in async_splittedfiles:
+            async for file in async_splitfiles:
                 sent_files += 1
                 await send_file(
                     unzip_bot=unzip_bot,
                     c_id=user_id,
                     doc_f=file,
                     query=query,
-                    full_path=splitteddir,
+                    full_path=splitdir,
                     log_msg=log_msg,
                     split=True,
                 )
 
             try:
-                shutil.rmtree(splitteddir)
+                shutil.rmtree(splitdir)
                 os.remove(path=file)
             except:
                 pass
@@ -1786,17 +1786,17 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         file="callbacks", key="SPLITTING", user_id=uid, extra_args=fname
                     ),
                 )
-                splitteddir = f"{Config.DOWNLOAD_LOCATION}/splitted/{user_id}"
-                os.makedirs(name=splitteddir, exist_ok=True)
-                ooutput = f"{splitteddir}/{fname}"
-                splittedfiles = await split_files(
+                splitdir = f"{Config.DOWNLOAD_LOCATION}/split/{user_id}"
+                os.makedirs(name=splitdir, exist_ok=True)
+                ooutput = f"{splitdir}/{fname}"
+                splitfiles = await split_files(
                     iinput=file, ooutput=ooutput, size=Config.TG_MAX_SIZE
                 )
-                LOGGER.info(msg=splittedfiles)
+                LOGGER.info(msg=splitfiles)
 
-                if not splittedfiles:
+                if not splitfiles:
                     try:
-                        shutil.rmtree(splitteddir)
+                        shutil.rmtree(splitdir)
                     except:
                         pass
 
@@ -1817,22 +1817,22 @@ async def unzip_cb(unzip_bot: Client, query: CallbackQuery):
                         extra_args=fname,
                     )
                 )
-                async_splittedfiles = async_generator(splittedfiles)
+                async_splitfiles = async_generator(splitfiles)
 
-                async for s_file in async_splittedfiles:
+                async for s_file in async_splitfiles:
                     sent_files += 1
                     await send_file(
                         unzip_bot=unzip_bot,
                         c_id=user_id,
                         doc_f=s_file,
                         query=query,
-                        full_path=splitteddir,
+                        full_path=splitdir,
                         log_msg=log_msg,
                         split=True,
                     )
 
                 try:
-                    shutil.rmtree(splitteddir)
+                    shutil.rmtree(splitdir)
                 except:
                     pass
 
