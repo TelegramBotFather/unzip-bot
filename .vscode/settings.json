@@ -39,6 +39,9 @@
   "editor.suggestSelection": "first",
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
+  "evenBetterToml.schema.associations": {
+    "pyproject.toml": "https://json.schemastore.org/pyproject.json"
+  },
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": true,
   "explorer.fileNesting.patterns": {
@@ -86,6 +89,7 @@
   "python.analysis.inlayHints.pytestParameters": true,
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.languageServerMode": "full",
+  "python.analysis.typeCheckingMode": "standard",
   "python.analysis.supportDocstringTemplate": true,
   "python.analysis.supportRestructuredText": true,
   "python.createEnvironment.trigger": "off",
