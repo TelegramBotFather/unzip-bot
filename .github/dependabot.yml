@@ -13,8 +13,7 @@ updates:
     reviewers:
       - "EDM115"
     schedule:
-      day: "sunday"
-      interval: "weekly"
-      time: "20:00"
+      interval: "monthly"
+      time: "08:00"
       timezone: "Europe/Paris"
 version: 2
