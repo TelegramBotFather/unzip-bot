@@ -14,8 +14,7 @@
 > [!IMPORTANT]  
 > The bot is undergoing an important rewrite.  
 > Please be patient and wait a few months to get the unzip-bot in its full glory !  
-> Check [[ROADMAP] The future of unzip-bot (v7) (#296)](https://github.com/EDM115/unzip-bot/issues/296) to know more about the current development.  
-> Check [the master branch](https://github.com/EDM115/unzip-bot/tree/master) to use the older version.
+> Check [[ROADMAP] The future of unzip-bot (v7) (#296)](https://github.com/EDM115/unzip-bot/issues/296) to know more about the current development.
 
 ---
 
@@ -132,10 +131,10 @@ If you found a bug in this bot please open an [issue](https://github.com/EDM115/
 Same if you have any feature request :wink:
 
 ## License & Copyright :cop:
-Copyright (c) 2022 - 2025 EDM115  
+Copyright (c) 2022 - present EDM115  
   
 This unzip-bot repository is licensed under the [MIT License](https://github.com/EDM115/unzip-bot/blob/master/LICENSE)  
 Enjoy copying and modifying, but always mention me  
   
 • Inspired by Itz-fork/Nexa's work, but with additional features and bug fixes.  
-This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot), props to him for the OG code
+This is a maintained repo of the [original](https://github.com/Itz-fork/Unzipper-Bot), props to him for the OG code :saluting_face:

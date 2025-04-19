@@ -3,11 +3,11 @@
 echo "
 🔥 unzip-bot 🔥
 
-Copyright (c) 2022 - 2025 EDM115
-MIT License
+» Copyright (c) 2022 - 2025 EDM115
+» MIT License
 
---> Join @EDM115bots on Telegram
---> Follow EDM115 on Github
+»» Join @EDM115bots on Telegram
+»» Follow EDM115 on GitHub
 "
 
 if [ -f .env ] && [[ ! "$DYNO" =~ ^worker.* ]]; then

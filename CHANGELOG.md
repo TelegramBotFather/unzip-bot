@@ -24,6 +24,7 @@ You will find here all the changes made with each version, in antichronological 
 - Simplifies the way we pass data to the `Messages.get()` i18n function, allows to use named arguments
 - All function calls now use named arguments, as far as Pylance reported them
 - Made `v7` the default branch
+- Created the different files methods will rest on, continuing the split of files
 
 ### v7.2.0
 - Switched from Kurigram to [pyrofork](https://github.com/Mayuri-Chan/pyrofork/) due to connection issues (I hate framework hopping)

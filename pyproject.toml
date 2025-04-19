@@ -1,6 +1,6 @@
 [project]
 name = "unzip-bot"
-version = "7.2.0"
+version = "7.3.0"
 authors = [{ name = "EDM115", email = "unzip@edm115.dev" }]
 description = "A Telegram bot to extract various types of archives"
 dependencies = [
