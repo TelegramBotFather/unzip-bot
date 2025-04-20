@@ -67,6 +67,12 @@ help - In case you need 😭
 Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in Heroku or in a VPS :heart:  
 **Star :star2: Fork :fork_and_knife: and Deploy :outbox_tray:**
 
+> [!TIP]  
+> If you need a cloud server (VPS) to host the bot, try Hetzner Cloud.  
+> This is what I personally use for all my bots, my website, APIs and more !  
+> Cheap service but awesome quality.  
+> Sign up using [this link](https://hetzner.cloud/?ref=yGsG8KCFjO6i) to get 20€ in cloud credits.
+
 #### The lazy way
 [![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/v7)  
 (if you're in a fork, make sure to replace the template URL with your repo's one, also replace the URL in the Dockerfile)
