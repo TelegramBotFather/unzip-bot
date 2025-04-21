@@ -241,7 +241,8 @@ printf "%sℹ️ Automated usage available, run with -h|--help for more info%s\n
 if $CI_MODE; then
   printf "%s‼️ CI mode : proceeding without confirmation%s\n\n" "${red}" "${reset}"
 else
-  prompt_confirm "Proceed with setup ?" || {
+  printf "%s❓ Proceed with setup ?%s\n" "${blue}" "${reset}"
+  prompt_confirm || {
     print_box "❌ Setup aborted" "${red}"
     exit 0
   }
