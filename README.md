@@ -77,6 +77,21 @@ Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in He
 [![Deploy me :pleading_face:](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/EDM115/unzip-bot/tree/v7)  
 (if you're in a fork, make sure to replace the template URL with your repo's one, also replace the URL in the Dockerfile)
 
+#### The fast way
+Run the following command in your terminal
+```bash
+curl -LsSf https://raw.githubusercontent.com/EDM115/unzip-bot/refs/heads/v7/setup.sh | bash
+```
+*(if `curl` isn't available on your system, use `wget`)*
+```bash
+wget -qO- https://raw.githubusercontent.com/EDM115/unzip-bot/refs/heads/v7/setup.sh | bash
+```
+**DO NOT** run this script as `sudo`. If Docker complains, follow [Docker's postinstall steps](https://docs.docker.com/engine/install/linux-postinstall/).  
+Usage of flags is available with this script to make it a bit faster. More info with `-h|--help`  
+```bash
+curl -LsSf https://raw.githubusercontent.com/EDM115/unzip-bot/refs/heads/v7/setup.sh | bash -s -- -h
+```
+
 #### The easy way
 - Install [Docker](https://www.docker.com/) then restart your computer (if on Windows)
 ```bash

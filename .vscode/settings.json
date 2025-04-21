@@ -51,7 +51,7 @@
     "heroku.yml": "app.json",
     "package.json": "package-lock.json, pnpm*",
     "README.md": "LICENSE, CHANGELOG.md, CreateMongoDB.md, bot_thumb.jpg",
-    "start.sh": "install_unrar.sh"
+    "start.sh": "install_unrar.sh, setup.sh"
   },
   "files.autoSave": "afterDelay",
   "files.eol": "\n",
