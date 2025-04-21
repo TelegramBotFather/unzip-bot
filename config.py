@@ -13,7 +13,7 @@ class Config:
     # Default chunk size (0.005 MB → 1024*6) Increase if you need faster downloads
     CHUNK_SIZE = 1024 * 1024 * 10  # 10 MB
     DOWNLOAD_LOCATION = f"{os.path.dirname(__file__)}/Downloaded"
-    IS_HEROKU = os.environ.get("DYNO", default="").startswith(prefix="worker.")
+    IS_HEROKU = os.environ.get("DYNO", default="").startswith("worker.")
     LOCKFILE = "/tmp/unzipbot.lock"
     LOGS_CHANNEL = (
         int(os.environ.get("LOGS_CHANNEL"))

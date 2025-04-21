@@ -1,6 +1,7 @@
 import json
 
 from config import Config
+from unzipbot.helpers.database import get_lang
 
 
 class Messages:
@@ -63,3 +64,6 @@ class Messages:
             extra_args = [extra_args]
 
         return message.format(*extra_args)
+
+
+messages = Messages(lang_fetcher=get_lang)

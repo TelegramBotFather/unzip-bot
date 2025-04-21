@@ -41,6 +41,7 @@ def get_size(doc_f):
 messages = Messages(lang_fetcher=get_lang)
 
 
+# TODO
 async def check_logs():
     try:
         if Config.LOGS_CHANNEL:
@@ -62,6 +63,7 @@ async def check_logs():
         return False
 
 
+# TODO
 async def dl_thumbs():
     thumbs = await get_thumb_users()
     i = 0
@@ -103,6 +105,7 @@ async def dl_thumbs():
             )
 
 
+# TODO
 async def set_boot_time():
     boot = await get_boot()
     await set_old_boot(boot)
@@ -135,6 +138,7 @@ async def set_boot_time():
         await warn_users()
 
 
+# TODO
 async def warn_users():
     await clear_cancel_tasks()
     await clear_merge_tasks()
@@ -164,6 +168,7 @@ async def warn_users():
         await clear_ongoing_tasks()
 
 
+# TODO
 async def remove_expired_tasks(firststart=False):
     ongoing_tasks = await get_ongoing_tasks()
     await clear_cancel_tasks()
@@ -221,10 +226,12 @@ async def remove_expired_tasks(firststart=False):
                         )
 
 
+# TODO
 @aiocron.crontab("*/5 * * * *")
 async def scheduled_remove_expired_tasks():
     await remove_expired_tasks()
 
 
+# TODO
 async def start_cron_jobs():
     scheduled_remove_expired_tasks.start()

@@ -141,6 +141,7 @@ async def download(url, path):
         LOGGER.error(msg=messages.get(file="callbacks", key="ERR_DL", extra_args=url))
 
 
+# TODO
 async def download_with_progress(url, path, message, unzip_bot):
     uid = message.from_user.id
 
@@ -192,6 +193,7 @@ async def async_generator(iterable):
         yield item
 
 
+# TODO
 # Callbacks
 @unzipbot_client.on_callback_query()
 async def unzip_cb(unzip_bot: Client, query: CallbackQuery):

@@ -39,7 +39,7 @@ async def get_size(doc_f):
     except:
         return -1
 
-
+# TODO
 # Send file to a user
 async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
     fsize = await get_size(doc_f)
@@ -413,7 +413,7 @@ async def send_file(unzip_bot, c_id, doc_f, query, full_path, log_msg, split):
         LOGGER.error(msg=e)
         shutil.rmtree(full_path)
 
-
+# TODO
 async def forward_file(message, cid):
     try:
         await unzipbot_client.copy_message(
@@ -426,7 +426,7 @@ async def forward_file(message, cid):
         await asyncio.sleep(f.value)
         await forward_file(message=message, cid=cid)
 
-
+# TODO
 async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
     try:
         u_file_size = os.stat(path=doc_f).st_size
@@ -471,7 +471,7 @@ async def send_url_logs(unzip_bot, c_id, doc_f, source, message):
     except BaseException:
         pass
 
-
+# TODO
 async def merge_split_archives(user_id, path):
     cmd = f'cd "{path}" && cat * > MERGED_{user_id}.zip'
     await run_shell_cmds(cmd)
@@ -482,6 +482,7 @@ async def rm_mark_chars(text: str):
     return re.sub(pattern="[*`_]", repl="", string=text)
 
 
+# TODO
 # Function to answer queries
 async def answer_query(
     query, message_text: str, answer_only: bool = False, unzip_client=None, buttons=None

@@ -14,6 +14,7 @@ from unzipbot.i18n.messages import Messages
 messages = Messages(lang_fetcher=get_lang)
 
 
+# TODO
 async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_bot):
     if not message:
         return
@@ -107,6 +108,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, start, unzip_b
                 pass
 
 
+# TODO
 async def progress_urls(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
@@ -161,6 +163,7 @@ async def progress_urls(current, total, ud_type, message, start):
             pass
 
 
+# TODO
 def humanbytes(size):
     if not size:
         return ""
@@ -176,6 +179,7 @@ def humanbytes(size):
     return str(round(number=size, ndigits=2)) + " " + Dic_powerN.get(n) + "B"
 
 
+# TODO
 def TimeFormatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
@@ -192,6 +196,7 @@ def TimeFormatter(milliseconds: int) -> str:
     return tmp[:-2]
 
 
+# TODO
 def timeformat_sec(seconds: int) -> str:
     minutes, seconds = divmod(int(seconds), 60)
     hours, minutes = divmod(minutes, 60)

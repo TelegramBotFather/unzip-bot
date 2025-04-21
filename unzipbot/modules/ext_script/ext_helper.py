@@ -38,6 +38,7 @@ async def cleanup_macos_artifacts(extraction_path):
                 shutil.rmtree(os.path.join(root, name))
 
 
+# TODO
 async def run_shell_cmds(command):
     memlimit = calculate_memory_limit()
     cpulimit = Config.MAX_CPU_CORES_COUNT * Config.MAX_CPU_USAGE
@@ -70,6 +71,7 @@ async def run_shell_cmds(command):
     return o + "\n" + e
 
 
+# TODO
 # Extract with 7z
 async def __extract_with_7z_helper(path, archive_path, password=None):
     LOGGER.info(msg="7z : " + archive_path + " : " + path)
@@ -91,6 +93,7 @@ async def __extract_with_7z_helper(path, archive_path, password=None):
     return result
 
 
+# TODO
 async def test_with_7z_helper(archive_path):
     # skipcq: PTC-W1006, SCT-A000
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"
@@ -100,6 +103,7 @@ async def test_with_7z_helper(archive_path):
     return "Everything is Ok" in result
 
 
+# TODO
 async def __extract_with_unrar_helper(path, archive_path, password=None):
     LOGGER.info(msg="unrar : " + archive_path + " : " + path)
 
@@ -120,6 +124,7 @@ async def __extract_with_unrar_helper(path, archive_path, password=None):
     return result
 
 
+# TODO
 async def test_with_unrar_helper(archive_path):
     # skipcq: PTC-W1006, SCT-A000
     password = "dont care + didnt ask + cry about it + stay mad + get real + L"
@@ -129,6 +134,7 @@ async def test_with_unrar_helper(archive_path):
     return "All OK" in result
 
 
+# TODO
 # Extract with zstd (for .tar.zst files)
 async def __extract_with_zstd(path, archive_path):
     cmd = ["zstd", "-f", "--output-dir-flat", quote(path), "-d", quote(archive_path)]
@@ -137,6 +143,7 @@ async def __extract_with_zstd(path, archive_path):
     return result
 
 
+# TODO
 # Main function to extract files
 async def extr_files(path, archive_path, password=None):
     os.makedirs(name=path, exist_ok=True)
@@ -181,6 +188,7 @@ async def extr_files(path, archive_path, password=None):
     return result
 
 
+# TODO
 # Split files
 async def split_files(iinput, ooutput, size):
     temp_location = iinput + "_temp"
@@ -201,6 +209,7 @@ async def split_files(iinput, ooutput, size):
     return files
 
 
+# TODO
 # Merge files
 async def merge_files(iinput, ooutput, file_type, password=None):
     if file_type == "volume":
@@ -215,6 +224,7 @@ async def merge_files(iinput, ooutput, file_type, password=None):
     return result
 
 
+# TODO
 # Make keyboard
 async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     num = 0
@@ -273,6 +283,7 @@ async def make_keyboard(paths, user_id, chat_id, unziphttp, rzfile=None):
     return i_kbd
 
 
+# TODO
 async def make_keyboard_empty(user_id, chat_id, unziphttp, rzfile=None):
     i_kbd = InlineKeyboard(row_width=2)
     data = []
