@@ -7,7 +7,12 @@
 set -euo pipefail
 UNRAR_VERSION="7.1.6"
 
-echo "Installing unrar version ${UNRAR_VERSION}"
+green=$(tput setaf 2)
+red=$(tput setaf 1)
+reset=$(tput sgr0)
+yellow=$(tput setaf 3)
+
+printf "\n%sℹ️ Installing unrar version %s%s\n" "${yellow}" "${UNRAR_VERSION}" "${reset}"
 mkdir /tmp/unrar
 curl -o \
   /tmp/unrar.tar.gz -L \
@@ -16,8 +21,17 @@ curl -o \
 tar xf \
   /tmp/unrar.tar.gz -C \
   /tmp/unrar --strip-components=1
-cd /tmp/unrar || exit
+cd /tmp/unrar || {
+  printf "%s❌ Failed to change directory to /tmp/unrar%s\n" "${red}" "${reset}"
+  exit 1
+}
 
-make
-install -v -m755 unrar /usr/local/bin
-echo "unrar version $(unrar -iver) installed successfully"
+make || {
+  printf "%s❌ Make command failed%s\n" "${red}" "${reset}"
+  exit 1
+}
+install -v -m755 unrar /usr/local/bin || {
+  printf "%s❌ Installation of unrar failed%s\n" "${red}" "${reset}"
+  exit 1
+}
+printf "\n%s✅ unrar version $(unrar -iver) installed successfully%s\n" "${green}" "${reset}"

@@ -5,10 +5,12 @@ IFS=$'\n\t'
 
 # ANSI styling
 bold=$(tput bold)
-reset=$(tput sgr0)
 blue=$(tput setaf 4)
 green=$(tput setaf 2)
+magenta=$(tput setaf 5)
 red=$(tput setaf 1)
+reset=$(tput sgr0)
+yellow=$(tput setaf 3)
 
 # Draw a box around text
 print_box() {
@@ -16,12 +18,81 @@ print_box() {
   local color="${2:-}"
   # split into lines
   mapfile -t lines <<<"$txt"
+  declare -a disp_lens
   # compute maximum line length
   local max=0
 
-  for line in "${lines[@]}"; do
-    local len=${#line}
-    ((len > max)) && max=$len
+  for line in "${!lines[@]}"; do
+    local raw="${lines[line]}"
+    local disp=0 prev_code=0 fudge=0
+
+    # read each code‑point (UTF‑8 locale)
+    while IFS= read -r -n1 ch; do
+      [[ -z $ch ]] && break
+
+      # codepoint integer
+      local code
+      code=$(printf '%d' "'$ch")
+
+      # skip zero‑width joiner
+      if ((code == 0x200D)); then
+        continue
+      fi
+
+      # if it's VS‑16, only pad if the base wasn't already counted as "wide"
+      if ((code == 0xFE0F)); then
+        if (((\
+          prev_code >= 0x1100 && prev_code <= 0x115F) || (\
+          prev_code >= 0x2329 && prev_code <= 0x232A) || (\
+          prev_code >= 0x2E80 && prev_code <= 0xA4CF) || (\
+          prev_code >= 0xAC00 && prev_code <= 0xD7A3) || (\
+          prev_code >= 0xF900 && prev_code <= 0xFAFF) || (\
+          prev_code >= 0xFE10 && prev_code <= 0xFE19) || (\
+          prev_code >= 0xFE30 && prev_code <= 0xFE6F) || (\
+          prev_code >= 0xFF00 && prev_code <= 0xFF60) || (\
+          prev_code >= 0xFFE0 && prev_code <= 0xFFE6) || (\
+          prev_code >= 0x2600 && prev_code <= 0x26FF) || (\
+          prev_code >= 0x2700 && prev_code <= 0x27BF) || (\
+          prev_code >= 0x1F300 && prev_code <= 0x1F5FF) || (\
+          prev_code >= 0x1F600 && prev_code <= 0x1F64F) || (\
+          prev_code >= 0x1F900 && prev_code <= 0x1F9FF))) \
+            ; then
+          fudge=-1
+        fi
+
+        continue
+      fi
+
+      # classify wide vs narrow
+      if (((\
+        code >= 0x1100 && code <= 0x115F) || (\
+        code >= 0x2329 && code <= 0x232A) || (\
+        code >= 0x2E80 && code <= 0xA4CF) || (\
+        code >= 0xAC00 && code <= 0xD7A3) || (\
+        code >= 0xF900 && code <= 0xFAFF) || (\
+        code >= 0xFE10 && code <= 0xFE19) || (\
+        code >= 0xFE30 && code <= 0xFE6F) || (\
+        code >= 0xFF00 && code <= 0xFF60) || (\
+        code >= 0xFFE0 && code <= 0xFFE6) || (\
+        code >= 0x2600 && code <= 0x26FF) || (\
+        code >= 0x2700 && code <= 0x27BF) || (\
+        code >= 0x1F300 && code <= 0x1F5FF) || (\
+        code >= 0x1F600 && code <= 0x1F64F) || (\
+        code >= 0x1F900 && code <= 0x1F9FF))) \
+          ; then
+        disp=$((disp + 2))
+      else
+        disp=$((disp + 1))
+      fi
+
+      prev_code=$code
+    done <<<"$raw"
+
+    # tack on that single‑column VS‑16 fudge where needed
+    disp=$((disp + fudge))
+
+    disp_lens[line]=$disp
+    ((disp > max)) && max=$disp
   done
 
   local border=$((max + 4))
@@ -29,12 +100,13 @@ print_box() {
   printf "\n${bold}${color}╭%*s╮\n" "$border" '' | tr ' ' '─'
 
   # centered lines
-  for line in "${lines[@]}"; do
-    local len=${#line}
-    local pad=$((max - len))
+  for i in "${!lines[@]}"; do
+    local line="${lines[i]}"
+    local dlen=${disp_lens[i]}
+    local pad=$((max - dlen))
     local left=$((pad / 2))
     local right=$((pad - left))
-    printf "│${reset}%*s%s%*s${color}│\n" $((left + 2)) '' "$line" $((right + 2)) ''
+    printf "│${reset}%*s%s%*s${color}│\n" $((left + 2)) "" "$line" $((right + 2)) ""
   done
 
   # bottom border
@@ -46,7 +118,7 @@ validate_var() {
   local name="$1" value="$2" regex="$3"
 
   if [[ ! "$value" =~ $regex ]]; then
-    print_box "Error : invalid $name [ $value ]" "${red}"
+    print_box "❌ Error : invalid $name [ $value ]" "${red}"
     exit 1
   fi
 }
@@ -69,7 +141,7 @@ prompt_input() {
       return
     fi
 
-    echo "${red}Value cannot be empty${reset}"
+    echo "${red}❗ Value cannot be empty${reset}"
   done
 }
 
@@ -115,7 +187,7 @@ WORKING_DIR=$(pwd)
 while [[ $# -gt 0 ]]; do
   case "$1" in
   -h | --help)
-    print_box $'Usage : setup.sh [options]\n\nOptions :\n-a|--ci • Run in CI mode (automated)\n-e|--env • Path to env file (required in CI mode)\n-d|--dir • Directory to clone into (current/home)\n-f|--folder • Folder name to clone into\n-h|--help • Display this help message' "${blue}"
+    print_box $'ℹ️ Usage : setup.sh [options]\n\n⚙️  Options :\n-a|--ci • Run in CI mode (automated)\n-e|--env • Path to env file (required in CI mode)\n-d|--dir • Directory to clone into (current/home)\n-f|--folder • Folder name to clone into\n-h|--help • Display this help message' "${blue}"
     exit 0
     ;;
   -a | --ci)
@@ -123,7 +195,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   -e | --env)
     if ! $CI_MODE; then
-      print_box "Error : -e|--env requires -a|--ci" "${red}"
+      print_box "❌ Error : -e|--env requires -a|--ci" "${red}"
       exit 1
     fi
 
@@ -132,14 +204,14 @@ while [[ $# -gt 0 ]]; do
     ;;
   -d | --dir)
     if ! $CI_MODE; then
-      print_box "Error : -d|--dir requires -a|--ci" "${red}"
+      print_box "❌ Error : -d|--dir requires -a|--ci" "${red}"
       exit 1
     fi
 
     case "$2" in
     current) DIR=$(realpath ".") ;; home) DIR=$(realpath "~") ;;
     *)
-      print_box 'Error : -d|--dir must be "current" or "home"' "${red}"
+      print_box '❌ Error : -d|--dir must be "current" or "home"' "${red}"
       exit 1
       ;;
     esac
@@ -148,7 +220,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   -f | --folder)
     if ! $CI_MODE; then
-      print_box "Error : -f|--folder requires -a|--ci" "${red}"
+      print_box "❌ Error : -f|--folder requires -a|--ci" "${red}"
       exit 1
     fi
 
@@ -156,42 +228,42 @@ while [[ $# -gt 0 ]]; do
     shift 2
     ;;
   *)
-    print_box "Unknown option : $1" "${red}"
+    print_box "❓ Unknown option : $1" "${red}"
     exit 1
     ;;
   esac
 done
 
 # 1) Welcome & confirm
-print_box $'unzip-bot setup script\nBy EDM115\n\nThis script allows you to easily set up the unzip-bot on your VPS !' "${blue}"
-printf "Automated usage available, run with -h|--help for more info.\n\n"
+print_box $'⚡ unzip-bot setup script ⚡\n👨‍💻 By EDM115 👨‍💻\n\nThis script allows you to easily set up the unzip-bot on your VPS !' "${blue}"
+printf "%sℹ️ Automated usage available, run with -h|--help for more info%s\n\n" "${magenta}" "${reset}"
 
 if $CI_MODE; then
-  printf "%sCI mode : proceeding without confirmation%s\n\n" "${red}" "${reset}"
+  printf "%s‼️ CI mode : proceeding without confirmation%s\n\n" "${red}" "${reset}"
 else
   prompt_confirm "Proceed with setup ?" || {
-    print_box "Setup aborted" "${red}"
+    print_box "❌ Setup aborted" "${red}"
     exit 0
   }
 fi
 
 # In CI mode, env file is mandatory
-printf "\n--- Step 1 : Configuration ---\n\n"
+printf "\n%s--- ⚙️  Step 1 : Configuration ---%s\n\n" "${yellow}" "${reset}"
 
 if $CI_MODE; then
   if [[ -z "$ENV_FILE" ]]; then
-    print_box "Error : in CI mode, -e|--env is required" "${red}"
+    print_box "❌ Error : in CI mode, -e|--env is required" "${red}"
     exit 1
   fi
 
   if [[ ! -f "$ENV_FILE" ]]; then
-    print_box "Error : env file $ENV_FILE not found" "${red}"
+    print_box "❌ Error : env file $ENV_FILE not found" "${red}"
     exit 1
   fi
 
-  printf "%sCI mode, skipping configuration prompts%s\n\n" "${blue}" "${reset}"
+  printf "%s❗ CI mode, skipping configuration prompts%s\n\n" "${blue}" "${reset}"
 else
-  printf "Tip : Press Enter to accept default values\n\n"
+  printf "%sℹ️ Tip : Press Enter to accept default values%s\n\n" "${magenta}" "${reset}"
   # ask directory
   dir_choice=$(prompt_input 'Install directory ("current" or "home")' "home")
 
@@ -199,7 +271,7 @@ else
   current) DIR=$(realpath ".") ;;
   home) DIR=$(realpath "~") ;;
   *)
-    print_box "Error : invalid choice [ $dir_choice ]" "${red}"
+    print_box "❌ Error : invalid choice [ $dir_choice ]" "${red}"
     exit 1
     ;;
   esac
@@ -216,12 +288,12 @@ fi
 
 # 2) Clone repo into named folder
 TARGET="${DIR%/}/$FOLDER"
-printf "\n--- Step 2 : Cloning repository into %s... ---\n\n" "$TARGET"
+printf "\n%s--- 📋 Step 2 : Cloning repository into %s... ---%s\n\n" "${yellow}" "$TARGET" "${reset}"
 parent_dir=$(dirname "$TARGET")
 
 # Check write permission on parent directory
 if [[ ! -w "$parent_dir" ]]; then
-  print_box "Error : no write permission to $parent_dir" "${red}"
+  print_box "❌ Error : no write permission to $parent_dir" "${red}"
   exit 1
 fi
 
@@ -229,7 +301,7 @@ git clone --quiet https://github.com/EDM115/unzip-bot.git "$TARGET"
 cd "$TARGET"
 
 # 3) Prepare .env
-printf "\n--- Step 3 : Preparing .env file ---\n\n"
+printf "\n%s--- 📝 Step 3 : Preparing .env file ---%s\n\n" "${yellow}" "${reset}"
 # variable definitions and regex patterns
 vars=(APP_ID API_HASH BOT_OWNER BOT_TOKEN MONGODB_DBNAME MONGODB_URL LOGS_CHANNEL)
 
@@ -254,7 +326,7 @@ if $CI_MODE; then
       cut -d= -f2- |
       tr -d $'\r')
     [[ -n "$val" ]] || {
-      print_box "Error : $name missing in $ENV_FILE" "${red}"
+      print_box "❌ Error : $name missing in $ENV_FILE" "${red}"
       exit 1
     }
     validate_var "$name" "$val" "${regexes[$name]}"
@@ -281,7 +353,7 @@ else
       done
     done <"$ENV_FILE"
 
-    printf "Tip : Press Enter to accept default values\n\n"
+    printf "%sℹ️ Tip : Press Enter to accept default values%s\n\n" "${magenta}" "${reset}"
   fi
 
   for name in "${vars[@]}"; do
@@ -293,19 +365,19 @@ else
   done
 fi
 
-printf "\n%s.env file filled%s\n\n" "${green}" "${reset}"
+printf "\n%s✅ .env file filled%s\n\n" "${green}" "${reset}"
 
 # 4) Build Docker image
-printf "\n--- Step 4 : Building Docker image ---\n\n"
+printf "\n%s--- 🛠️ Step 4 : Building Docker image ---%s\n\n" "${yellow}" "${reset}"
 docker build -t edm115/unzip-bot .
 
 # 5) Run Docker container
-printf "\n--- Step 5 : Starting Docker container ---\n\n"
+printf "\n%s--- 🚀 Step 5 : Starting Docker container ---%s\n\n" "${yellow}" "${reset}"
 docker run -d \
   -v downloaded-volume-prod:/app/Downloaded \
   -v thumbnails-volume-prod:/app/Thumbnails \
   --env-file ./.env \
   --name unzipbot edm115/unzip-bot
-print_box $'Setup complete\nThe bot is running, check Telegram !' "${green}"
-info=$(docker inspect -f $'ID : {{.Id}}\nName : {{.Name}}\nStatus : {{.State.Status}}\nImage : {{.Config.Image}}\nCreated at : {{.Created}}' unzipbot)
+print_box $'✅ Setup complete\nThe bot is running, check Telegram !' "${green}"
+info=$(docker inspect -f $'ℹ️ Docker info\n\nID : {{.Id}}\nName : {{.Name}}\nStatus : {{.State.Status}}\nImage : {{.Config.Image}}\nCreated at : {{.Created}}' unzipbot)
 print_box "$info" "${blue}"
