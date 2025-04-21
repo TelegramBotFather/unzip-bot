@@ -298,7 +298,11 @@ if [[ ! -w "$parent_dir" ]]; then
   exit 1
 fi
 
-git clone --quiet https://github.com/EDM115/unzip-bot.git "$TARGET"
+git clone --quiet https://github.com/EDM115/unzip-bot.git "$TARGET" || {
+  print_box "❌ Error : failed to clone repository" "${red}"
+  exit 1
+}
+printf "%s✅ Repository cloned%s\n\n" "${green}" "${reset}"
 cd "$TARGET"
 
 # 3) Prepare .env
