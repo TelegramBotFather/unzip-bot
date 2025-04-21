@@ -7,7 +7,7 @@
 set -euo pipefail
 UNRAR_VERSION="7.1.6"
 
-echo "Installing unrar version: ${UNRAR_VERSION}"
+echo "Installing unrar version ${UNRAR_VERSION}"
 mkdir /tmp/unrar
 curl -o \
   /tmp/unrar.tar.gz -L \
