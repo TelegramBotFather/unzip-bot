@@ -11,6 +11,7 @@ RUN apk update && \
         libffi-dev \
         make \
         musl-dev && \
+    apk add --no-cache dos2unix --repository=https://dl-cdn.alpinelinux.org/alpine/v3.21/community && \
     curl -LsSf https://astral.sh/uv/install.sh | sh
 
 SHELL ["/bin/bash", "-c"]
@@ -24,7 +25,11 @@ COPY uv.lock /tmp/uv.lock
 COPY install_unrar.sh /tmp/install_unrar.sh
 
 RUN uv sync --no-cache --locked && \
+    dos2unix /tmp/install_unrar.sh && \
+    chmod +x /tmp/install_unrar.sh && \
     /tmp/install_unrar.sh
+
+#####
 
 FROM python:3.12-alpine
 
@@ -51,6 +56,7 @@ RUN apk update && \
         tzdata \
         util-linux \
         zstd && \
+    apk add --no-cache dos2unix --repository=https://dl-cdn.alpinelinux.org/alpine/v3.21/community && \
     apk add --no-cache 7zip --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
@@ -68,7 +74,9 @@ COPY --from=build /usr/local/bin/unrar /tmp/unrar
 RUN git clone -b v7 https://github.com/EDM115/unzip-bot.git /app && \
     install -m 755 /tmp/unrar /usr/local/bin && \
     rm -rf /tmp/unrar && \
-    source /venv/bin/activate
+    source /venv/bin/activate && \
+    dos2unix /app/start.sh && \
+    chmod +x /app/start.sh
 
 COPY .env /app/.env
 
