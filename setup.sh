@@ -184,6 +184,12 @@ prompt_confirm() {
   [[ "${opts[cursor]}" == "Yes" ]]
 }
 
+# Early exit if the script is run as root
+if [[ $EUID -eq 0 ]]; then
+  print_box "❌ Error : script cannot be run as root" "${red}"
+  exit 1
+fi
+
 # Parse flags : require -a|--ci for other params
 CI_MODE=false
 
