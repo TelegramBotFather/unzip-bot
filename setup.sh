@@ -147,24 +147,36 @@ prompt_input() {
 
 # Prompt for yes/no with arrow keys
 prompt_confirm() {
-  local opts=(Yes No) cursor=0 key
+  local opts=(Yes No)
+  local cursor=0
+  local key rest
 
   while true; do
-    # build display : highlight selected option in green
+    # display current choice
     local left=${opts[0]} right=${opts[1]}
-
     if ((cursor == 0)); then
       printf "\r${bold}[ ${green}%s${reset}${bold} / %s ]${reset}" "$left" "$right"
     else
       printf "\r${bold}[ %s / ${green}%s${reset}${bold} ]${reset}" "$left" "$right"
     fi
 
-    read -rsn3 key
+    # read one character
+    IFS= read -rsn1 key
+    # if it's ESC, try to read two more bytes (arrow keys)
+    if [[ $key == $'\x1b' ]]; then
+      read -rsn2 -t 0.1 rest
+      key+=$rest
+    fi
 
     case "$key" in
-    $'\x1b[C' | $'\x1b[B') ((cursor = (cursor + 1) % 2)) ;; # → or ↓
-    $'\x1b[D' | $'\x1b[A') ((cursor = (cursor + 1) % 2)) ;; # ← or ↑
-    "") break ;;                                            # Enter
+    # → or ↓
+    $'\x1b[C' | $'\x1b[B') ((cursor = (cursor + 1) % 2)) ;;
+    # ← or ↑
+    $'\x1b[D' | $'\x1b[A') ((cursor = (cursor + 1) % 2)) ;;
+    # Enter
+    "") break ;;
+    # anything else: ignore
+    *) ;;
     esac
   done
 
