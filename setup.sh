@@ -196,53 +196,52 @@ CI_MODE=false
 for arg in "$@"; do [[ "$arg" =~ ^(-a|--ci)$ ]] && CI_MODE=true; done
 
 # Defaults
+ARG_DIR=false
+ARG_FOLDER=false
+ARG_ENV=false
+ARG_GIT=false
+
 DIR="$HOME/"
 FOLDER="unzip-bot-EDM115"
 ENV_FILE=""
+GIT_URL="https://github.com/EDM115/unzip-bot.git"
 WORKING_DIR=$(pwd)
 
 # Argument parsing
 while [[ $# -gt 0 ]]; do
   case "$1" in
   -h | --help)
-    print_box $'ℹ️ Usage : setup.sh [options]\n\n⚙️ Options :\n-a|--ci • Run in CI mode (automated)\n-e|--env • Path to env file (required in CI mode)\n-d|--dir • Directory to clone into (current/home)\n-f|--folder • Folder name to clone into\n-h|--help • Display this help message' "${blue}"
+    print_box $'ℹ️ Usage : setup.sh [options]\n\n⚙️ Options :\n-a|--ci • Run in CI mode (automated)\n-e|--env • Path to env file (required in CI mode)\n-d|--destination • Directory to clone into (current/home)\n-f|--foldername • Folder name to clone into\n-g|--git • Git repository URL\n-h|--help • Display this help message' "${blue}"
     exit 0
     ;;
   -a | --ci)
     shift
     ;;
   -e | --env)
-    if ! $CI_MODE; then
-      print_box "❌ Error : -e|--env requires -a|--ci" "${red}"
-      exit 1
-    fi
-
     ENV_FILE="$2"
+    ARG_ENV=true
     shift 2
     ;;
-  -d | --dir)
-    if ! $CI_MODE; then
-      print_box "❌ Error : -d|--dir requires -a|--ci" "${red}"
-      exit 1
-    fi
-
+  -d | --destination)
     case "$2" in
     current) DIR=$(realpath ".") ;; home) DIR=$(realpath "~") ;;
     *)
-      print_box '❌ Error : -d|--dir must be "current" or "home"' "${red}"
+      print_box '❌ Error : -d|--destination must be "current" or "home"' "${red}"
       exit 1
       ;;
     esac
 
+    ARG_DIR=true
     shift 2
     ;;
-  -f | --folder)
-    if ! $CI_MODE; then
-      print_box "❌ Error : -f|--folder requires -a|--ci" "${red}"
-      exit 1
-    fi
-
+  -f | --foldername)
     FOLDER=$(realpath "$2")
+    ARG_FOLDER=true
+    shift 2
+    ;;
+  -g | --git)
+    GIT_URL="$2"
+    ARG_GIT=true
     shift 2
     ;;
   *)
@@ -266,9 +265,9 @@ else
   }
 fi
 
-# In CI mode, env file is mandatory
 printf "\n%s--- ⚙️ Step 1 : Configuration ---%s\n\n" "${yellow}" "${reset}"
 
+# In CI mode, env file is mandatory
 if $CI_MODE; then
   if [[ -z "$ENV_FILE" ]]; then
     print_box "❌ Error : in CI mode, -e|--env is required" "${red}"
@@ -284,21 +283,33 @@ if $CI_MODE; then
 else
   printf "%sℹ️ Tip : Press Enter to accept default values%s\n\n" "${magenta}" "${reset}"
   # ask directory
-  dir_choice=$(prompt_input 'Install directory ("current" or "home")' "home")
+  if [ ! "$ARG_DIR" = true ] ; then
+    dir_choice=$(prompt_input '1/4 Install directory ("current" or "home")' "home")
 
-  case "$dir_choice" in
-  current) DIR=$(realpath ".") ;;
-  home) DIR=$(realpath "~") ;;
-  *)
-    print_box "❌ Error : invalid choice [ $dir_choice ]" "${red}"
-    exit 1
-    ;;
-  esac
+    case "$dir_choice" in
+    current) DIR=$(realpath ".") ;;
+    home) DIR=$(realpath "~") ;;
+    *)
+      print_box "❌ Error : invalid choice [ $dir_choice ]" "${red}"
+      exit 1
+      ;;
+    esac
+  fi
 
   # ask folder name
-  FOLDER=$(prompt_input "Folder name to clone into" "$FOLDER")
+  if [ ! "$ARG_FOLDER" = true ] ; then
+    FOLDER=$(prompt_input "2/4 Folder name to clone into" "$FOLDER")
+  fi
+
   # ask env file path
-  ENV_FILE=$(prompt_input "Path to env file containing pre-filled values (optional)" "" true)
+  if [ ! "$ARG_ENV" = true ] ; then
+    ENV_FILE=$(prompt_input "3/4 Path to env file containing pre-filled values (optional)" "" true)
+  fi
+
+  # ask git url
+  if [ ! "$ARG_GIT" = true ] ; then
+    GIT_URL=$(prompt_input "4/4 Git repository URL (must match the following format)" "$GIT_URL")
+  fi
 fi
 
 if [[ -n "$ENV_FILE" && ! "$ENV_FILE" =~ ^/ ]]; then
@@ -316,7 +327,24 @@ if [[ ! -w "$parent_dir" ]]; then
   exit 1
 fi
 
-git clone --quiet https://github.com/EDM115/unzip-bot.git "$TARGET" || {
+# Check if target directory already exists
+if [[ -d "$TARGET" ]]; then
+  printf "%s❗ Directory %s already exists%s\n" "${magenta}" "$TARGET" "${reset}"
+  printf "%s❓ Do you want to remove it ?%s\n" "${blue}" "${reset}"
+  printf "%s⚠️ Warning : this will delete all files in the directory%s\n" "${red}" "${reset}"
+  if prompt_confirm; then
+    rm -fr "$TARGET" || {
+      print_box "❌ Error : failed to remove directory" "${red}"
+      exit 1
+    }
+    printf "%s✅ Directory removed%s\n\n" "${green}" "${reset}"
+  else
+    print_box "❌ Error : setup aborted" "${red}"
+    exit 1
+  fi
+fi
+
+git clone --quiet "$GIT_URL" "$TARGET" || {
   print_box "❌ Error : failed to clone repository" "${red}"
   exit 1
 }
