@@ -199,7 +199,7 @@ WORKING_DIR=$(pwd)
 while [[ $# -gt 0 ]]; do
   case "$1" in
   -h | --help)
-    print_box $'ℹ️ Usage : setup.sh [options]\n\n⚙️  Options :\n-a|--ci • Run in CI mode (automated)\n-e|--env • Path to env file (required in CI mode)\n-d|--dir • Directory to clone into (current/home)\n-f|--folder • Folder name to clone into\n-h|--help • Display this help message' "${blue}"
+    print_box $'ℹ️ Usage : setup.sh [options]\n\n⚙️ Options :\n-a|--ci • Run in CI mode (automated)\n-e|--env • Path to env file (required in CI mode)\n-d|--dir • Directory to clone into (current/home)\n-f|--folder • Folder name to clone into\n-h|--help • Display this help message' "${blue}"
     exit 0
     ;;
   -a | --ci)
@@ -247,7 +247,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # 1) Welcome & confirm
-print_box $'⚡ unzip-bot setup script ⚡\n👨‍💻 By EDM115 👨‍💻\n\nThis script allows you to easily set up the unzip-bot on your VPS !' "${blue}"
+print_box $'⚡ unzip-bot setup script ⚡\n💻 By EDM115 💻\n\nThis script allows you to easily set up the unzip-bot on your VPS !' "${blue}"
 printf "%sℹ️ Automated usage available, run with -h|--help for more info%s\n\n" "${magenta}" "${reset}"
 
 if $CI_MODE; then
@@ -261,7 +261,7 @@ else
 fi
 
 # In CI mode, env file is mandatory
-printf "\n%s--- ⚙️  Step 1 : Configuration ---%s\n\n" "${yellow}" "${reset}"
+printf "\n%s--- ⚙️ Step 1 : Configuration ---%s\n\n" "${yellow}" "${reset}"
 
 if $CI_MODE; then
   if [[ -z "$ENV_FILE" ]]; then
