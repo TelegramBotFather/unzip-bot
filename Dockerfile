@@ -1,39 +1,7 @@
-FROM python:3.12-alpine AS build
-
-ENV UV_INSTALL_DIR="/uv"
-
-RUN apk update && \
-    apk add --no-cache \
-        bash \
-        curl \
-        g++ \
-        gcc \
-        libffi-dev \
-        make \
-        musl-dev && \
-    apk add --no-cache dos2unix --repository=https://dl-cdn.alpinelinux.org/alpine/v3.21/community && \
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-
-SHELL ["/bin/bash", "-c"]
-
-ENV PATH="$UV_INSTALL_DIR:$PATH"
-
-WORKDIR /tmp
-
-COPY pyproject.toml /tmp/pyproject.toml
-COPY uv.lock /tmp/uv.lock
-COPY install_unrar.sh /tmp/install_unrar.sh
-
-RUN uv sync --no-cache --locked && \
-    dos2unix /tmp/install_unrar.sh && \
-    chmod +x /tmp/install_unrar.sh && \
-    /tmp/install_unrar.sh
-
-#####
-
 FROM python:3.12-alpine
 
 ENV UV_INSTALL_DIR="/uv"
+ENV TERM=xterm
 ARG VERSION="7.3.0"
 
 LABEL org.opencontainers.image.authors="EDM115 <unzip@edm115.dev>"
@@ -51,7 +19,14 @@ RUN apk update && \
         cpulimit \
         curl \
         ffmpeg \
+        g++ \
+        gcc \
         git \
+        jq \
+        libffi-dev \
+        make \
+        musl-dev \
+        ncurses \
         tar \
         tzdata \
         util-linux \
@@ -63,18 +38,21 @@ RUN apk update && \
 
 SHELL ["/bin/bash", "-c"]
 
-ENV PATH="$UV_INSTALL_DIR:/venv/bin:$PATH"
+ENV PATH="$UV_INSTALL_DIR:/app/.venv/bin:$PATH"
 ENV TZ=Europe/Paris
 
 WORKDIR /app
 
-COPY --from=build /tmp/.venv /venv
-COPY --from=build /usr/local/bin/unrar /tmp/unrar
-
-RUN git clone -b v7 https://github.com/EDM115/unzip-bot.git /app && \
+RUN git clone -b v7-rework-part-1 https://github.com/EDM115/unzip-bot.git /app && \
+    uv sync --no-cache --locked && \
+    curl -LsSf https://api.github.com/repos/EDM115/unrar-alpine/releases/latest \
+        | jq -r '.assets[] | select(.name == "unrar") | .id' \
+        | xargs -I {} curl -LsSf https://api.github.com/repos/EDM115/unrar-alpine/releases/assets/{} \
+        | jq -r '.browser_download_url' \
+        | xargs -I {} curl -Lsf {} -o /tmp/unrar && \
     install -m 755 /tmp/unrar /usr/local/bin && \
-    rm -rf /tmp/unrar && \
-    source /venv/bin/activate && \
+    rm /tmp/unrar && \
+    source /app/.venv/bin/activate && \
     dos2unix /app/start.sh && \
     chmod +x /app/start.sh
 
