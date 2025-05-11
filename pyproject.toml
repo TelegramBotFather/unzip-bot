@@ -19,7 +19,7 @@ dependencies = [
   "psutil==7.0.0",
   "pykeyboard==0.1.5",
   "pyrofork==2.3.61",
-  "PyTgCrypto==1.2.9.2",
+  "PyTgCrypto==1.2.11",
   "requests==2.32.3",
   "setuptools==80.1.0",
   "unzip-http==0.6",
