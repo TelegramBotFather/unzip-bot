@@ -80,16 +80,16 @@ Deploying is easy :smiling_face_with_three_hearts: You can deploy this bot in He
 #### The fast way
 Run the following command in your terminal
 ```bash
-bash <(curl -sSL https://raw.githubusercontent.com/EDM115/unzip-bot/v7/setup.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/EDM115/unzip-bot/v7-rework-part-1/setup.sh)
 ```
 *(if `curl` isn't available on your system, use `wget`)*
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/EDM115/unzip-bot/v7/setup.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/EDM115/unzip-bot/v7-rework-part-1/setup.sh)
 ```
 **DO NOT** run this script as `sudo`. If Docker complains, follow [Docker's postinstall steps](https://docs.docker.com/engine/install/linux-postinstall/).  
 Usage of flags is available with this script to make it a bit faster. More info with `-h|--help`  
 ```bash
-bash <(curl -sSL https://raw.githubusercontent.com/EDM115/unzip-bot/v7/setup.sh) -- -h
+bash <(curl -sSL https://raw.githubusercontent.com/EDM115/unzip-bot/v7-rework-part-1/setup.sh) -- -h
 ```
 
 #### The easy way
